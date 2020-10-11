@@ -561,7 +561,7 @@ function drawTriNet(array) {
 
 //绘制原始剖分线、debug三角网、重叠三角形
 // para:  color=[r,g,b,a]
-function draw_three_objs(array_line, array_overlaptri, array_debug) {
+function draw_three_objs(line, array_line, array_overlaptri, array_debug) {
     var gl = getContextgl();
     gl.clearColor(0.95, 0.95, 0.95, 1);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -591,6 +591,7 @@ function draw_three_objs(array_line, array_overlaptri, array_debug) {
         }
     }
 
+    /*
     //绘制三角网
     gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 0.8]);
     for (let i = 0; i < array_debug.length; i++) {
@@ -598,5 +599,13 @@ function draw_three_objs(array_line, array_overlaptri, array_debug) {
         bindAttribute(gl, riverBuffer, program.a_Position, 2);
         gl.drawArrays(gl.LINE_LOOP, 0, 3); //绘制DEBUG三角网    
     }
+    */
+
+    //绘制中心线
+    gl.uniform4fv(program.u_color, [0.0, 0.5, 0.0, 0.5]);
+    var riverBuffer = createBuffer(gl, new Float32Array(line));
+    bindAttribute(gl, riverBuffer, program.a_Position, 2);
+    var n = line.length / 2;
+    gl.drawArrays(gl.LINE_STRIP, 0, n); //绘制DEBUG三角网    
 
 }

@@ -32,12 +32,13 @@ function draw(points, width) {
 
     //计算了很多遍插值
 
+    let line = toXYArray(points);
     let array_line = draw_line_Tris(points, width); //原始剖分三角形坐标
     let array_overlaptri = draw_Triobjs(points, width); // 重叠三角形坐标
     let array_debug = draw_debug_Trinet(points, width); //debug三角网坐标
 
     // 绘制
-    draw_three_objs(array_line, array_overlaptri, array_debug);
+    draw_three_objs(line, array_line, array_overlaptri, array_debug);
 }
 
 //绘制三角形串表示的线
