@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>a demo for draw river</title>
+</head>
+
+<body>
+    <canvas id="webgl" width="600" height="600"></canvas>
+    <script src="./data/sourcedata.js"></script>
+    <script src="./data/network_3.js"></script>
+    <script src="./data/network_1.js"></script>
+    <script src="./data/forest.js"></script>
+
+    <script src="./lib/GL_Util.js"></script>
+
+    <script src="./PointInTri.js"></script>
+    <script src="./BinaryTree.js"></script>
+    <script src="./drawLine.js"></script>
+
+    <script>
+        //保存所有构成河流的段
+        let stroke_array = getMapStructure(originData);
+
+        function display_forest() {
+
+            let forest = new Forest();
+            forest.newForest(stroke_array);
+            forest.DrawForest();
+        }
+
+        // display_forest();
+
+        var pts = initLine(3);
+        console.log(pts);
+        // detect(stroke_array[2].points,0.02);
+        draw(pts, 0.1);
+        // riverline();
+        // drawRiver(wholeArr);
+
+        // ？？？？？函数干嘛的？
+        function riverline() {
+            let positions = [];
+            for (let i = 0; i < stroke_array.length; i++) {
+                let position = [];
+                position = toXYArray(stroke_array[i].points);
+                positions.push(position);
+            }
+            console.log("-------");
+            drawRiver(positions);
+        }
+    </script>
+</body>
+
+</html>
