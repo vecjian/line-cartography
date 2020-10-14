@@ -1,3 +1,3 @@
-### 以三角形串绘制面状线
-### 绘制三角形线
-### 绘制
+ ## 数据处理
+    1. ArcGIS  
+    2. shapefile->json:[数据转换网站mapshaper.org](mapshaper.org)

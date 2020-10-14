@@ -199,6 +199,7 @@ Trianglesoverlap(tri3, tri2);
 // 未考虑三角形线段交点在线段端点处的情况，此情况下三角形有可能并不相交？？
 function lineIntersection(M, N, P, Q) {
     var flag = false;
+    const THRESHOLD = 0.0001
 
     // 线段1
     A1 = N.y - M.y;
@@ -221,16 +222,16 @@ function lineIntersection(M, N, P, Q) {
     }
     //判断交点是否在线段上，不包含三角形顶点
     if (
-        x < Math.max(M.x, N.x) &&
-        x > Math.min(M.x, N.x) &&
-        y < Math.max(M.y, N.y) &&
-        y > Math.min(M.y, N.y)
+        x < Math.max(M.x, N.x) - THRESHOLD &&
+        x > Math.min(M.x, N.x) + THRESHOLD &&
+        y < Math.max(M.y, N.y) - THRESHOLD &&
+        y > Math.min(M.y, N.y) + THRESHOLD
     ) {
         if (
-            x < Math.max(P.x, Q.x) &&
-            x > Math.min(P.x, Q.x) &&
-            y < Math.max(P.y, Q.y) &&
-            y > Math.min(P.y, Q.y)
+            x < Math.max(P.x, Q.x) - THRESHOLD &&
+            x > Math.min(P.x, Q.x) + THRESHOLD &&
+            y < Math.max(P.y, Q.y) - THRESHOLD &&
+            y > Math.min(P.y, Q.y) + THRESHOLD
         ) {
             console.log("有交点且交点在三角形边上");
             flag = true; //有交点且交点在三角形边上

@@ -14,6 +14,7 @@
     <script src="./data/network_3.js"></script>
     <script src="./data/network_1.js"></script>
     <script src="./data/forest.js"></script>
+    <script src="./data/longLine.js"></script>
 
     <script src="./lib/GL_Util.js"></script>
 
@@ -23,8 +24,10 @@
     <script src="./simplify.js"></script>
 
     <script>
-        //保存所有构成河流的段
+        //河流网所有河段
         let stroke_array = getMapStructure(originData);
+        //长河段
+        let arr = getMapStructure(longLine);
 
         function display_forest() {
             let forest = new Forest();
@@ -33,15 +36,25 @@
         }
         // display_forest();
 
-        //生成随机线条
-        // var pts = initLine(10);
-        // console.log(pts);
-        // draw(pts, 0.1);
+        // 生成随机线条
+        var pts = initLine(5);
+        // var p1 = new Point(0.3, 0);
+        // var p2 = new Point(0.6, 0);
+        // var p3 = new Point(0.2, 0.5);
 
-        //简化河系
-        var simplify_points = douglasPeucker(stroke_array[5].points, 0.0005);
-        //绘制线条
-        draw(simplify_points, 0.05);
+        // var p4 = new Point(0, 0);
+        // var p5 = new Point(1, 1);
+        // var p6 = new Point(0.8, -1);
+        // var pts = [p1, p2, p3];
+
+        console.log(pts);
+        draw(pts, 0.1);
+
+        // //简化河系
+        // var simplify_points = douglasPeucker(stroke_array[5].points, 0.0008);
+        // //绘制线条
+        // draw(simplify_points, 0.05);
+        // draw(arr.points, 0.05);
     </script>
 </body>
 
