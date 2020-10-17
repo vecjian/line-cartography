@@ -233,11 +233,11 @@ function lineIntersection(M, N, P, Q) {
             y < Math.max(P.y, Q.y) - THRESHOLD &&
             y > Math.min(P.y, Q.y) + THRESHOLD
         ) {
-            console.log("有交点且交点在三角形边上");
+            console.log("有交点且交点在线段内");
             flag = true; //有交点且交点在三角形边上
         }
     } else {
-        console.log("无交点在三角形边上");
+        console.log("无交点在线段内");
         // flag = false; //没有交点，或交点不在三角形边上
     }
 

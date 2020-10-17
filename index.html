@@ -25,9 +25,9 @@
 
     <script>
         //河流网所有河段
-        let stroke_array = getMapStructure(originData);
+        // let stroke_array = getMapStructure(originData);
         //长河段
-        let arr = getMapStructure(longLine);
+        let stroke_array = getMapStructure(longLine);
 
         function display_forest() {
             let forest = new Forest();
@@ -37,7 +37,7 @@
         // display_forest();
 
         // 生成随机线条
-        var pts = initLine(5);
+        // var pts = initLine(5);
         // var p1 = new Point(0.3, 0);
         // var p2 = new Point(0.6, 0);
         // var p3 = new Point(0.2, 0.5);
@@ -47,14 +47,14 @@
         // var p6 = new Point(0.8, -1);
         // var pts = [p1, p2, p3];
 
-        console.log(pts);
-        draw(pts, 0.1);
+        // console.log(pts);
+        // draw(pts, 0.1);
 
         // //简化河系
         // var simplify_points = douglasPeucker(stroke_array[5].points, 0.0008);
         // //绘制线条
         // draw(simplify_points, 0.05);
-        // draw(arr.points, 0.05);
+        draw(stroke_array[0].points, 0.05);
     </script>
 </body>
 

@@ -579,27 +579,27 @@ function draw_three_objs(line, array_line, array_overlaptri, array_debug) {
     }
 
 
-
-    // 绘制变色重叠三角形
-    if (array_overlaptri.length > 0) {
-        gl.uniform4fv(program.u_color, [1.0, 0.0, 0.0, 1.0]);
-        for (let i = 0; i < array_overlaptri.length; i++) {
-            var riverBuffer = createBuffer(gl, new Float32Array(array_overlaptri[i]));
-            bindAttribute(gl, riverBuffer, program.a_Position, 2);
-            var n = array_overlaptri[i].length / 2;
-            gl.drawArrays(gl.TRIANGLES, 0, n); //绘制多个三角形
+    /*
+        // 绘制变色重叠三角形
+        if (array_overlaptri.length > 0) {
+            gl.uniform4fv(program.u_color, [1.0, 0.0, 0.0, 1.0]);
+            for (let i = 0; i < array_overlaptri.length; i++) {
+                var riverBuffer = createBuffer(gl, new Float32Array(array_overlaptri[i]));
+                bindAttribute(gl, riverBuffer, program.a_Position, 2);
+                var n = array_overlaptri[i].length / 2;
+                gl.drawArrays(gl.TRIANGLES, 0, n); //绘制多个三角形
+            }
         }
-    }
-
-
-    //绘制三角网
-    gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 0.8]);
-    for (let i = 0; i < array_debug.length; i++) {
-        var riverBuffer = createBuffer(gl, new Float32Array(array_debug[i]));
-        bindAttribute(gl, riverBuffer, program.a_Position, 2);
-        gl.drawArrays(gl.LINE_LOOP, 0, 3); //绘制DEBUG三角网    
-    }
-
+    */
+    /*
+        //绘制三角网
+        gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 0.8]);
+        for (let i = 0; i < array_debug.length; i++) {
+            var riverBuffer = createBuffer(gl, new Float32Array(array_debug[i]));
+            bindAttribute(gl, riverBuffer, program.a_Position, 2);
+            gl.drawArrays(gl.LINE_LOOP, 0, 3); //绘制DEBUG三角网    
+        }
+    */
 
     //绘制中心线
     gl.uniform4fv(program.u_color, [0.0, 0.5, 0.0, 0.5]);
