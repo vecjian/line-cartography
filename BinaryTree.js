@@ -9,9 +9,11 @@ let widLevel = {
     level5: 0.006,
 };
 
-function getMapStructure(data) {
+function getMapStructure(data, istransformed) {
     getBoundary(data); //获取地图边界
     var strokes = [];
+    loadFile(data, istransformed);
+    return strokes;
 
     // 河段类，包含起止节点、ID、Length、level等属性
     function Stroke() {
@@ -23,7 +25,7 @@ function getMapStructure(data) {
         this.level = null;
     }
 
-    function loadFile(data) {
+    function loadFile(data, istransformed) {
         let features = data.features;
         let len = features.length;
         for (let i = 0; i < len; i++) {
@@ -35,15 +37,23 @@ function getMapStructure(data) {
             stroke.fromNode = line.properties.FromNode;
             stroke.toNode = line.properties.ToNode;
             stroke.level = line.properties.StreamLeve;
-            //将（x,y）坐标转换成Point结构
-            stroke.points = transform(line.geometry.coordinates);
-            // stroke.points = line.geometry.coordinates;
+            if (istransformed) {
+                // 将（x,y）坐标转换成Point结构，绘制树状河系
+                stroke.points = transform(line.geometry.coordinates);
+                console.log(stroke.points);
+            } else {
+                // 先不转换，判断冲突，改变计算的顺序
+                var pts = line.geometry.coordinates;
+                for (var j = 0; j < pts.length; j++) {
+                    var pt = new Point(pts[j][0], pts[j][1]);
+                    stroke.points.push(pt);
+                }
+            }
             strokes.push(stroke);
         }
+        console.log(strokes);
     }
 
-    loadFile(data);
-    return strokes;
 }
 
 // 节点数据结构
@@ -306,6 +316,7 @@ function getBoundary(data) {
             getMapSize(points[j][0], points[j][1]); //更新boundary
         }
     }
+    console.log(boundary.minX, boundary.maxX, boundary.minY, boundary.maxY);
 }
 
 //将（x,y）转换成point,同时转换成webgl坐标
@@ -323,6 +334,23 @@ function transform(points) {
     }
     return vecs;
 }
+
+//points是Point类数组
+function transform1(points) {
+    let vecs = [];
+    for (let i = 0; i < points.length; i++) {
+        let x = points[i].x;
+        let y = points[i].y;
+        //转换到（-1,1）之间
+        x = (2 * (x - boundary.minX)) / (boundary.maxX - boundary.minX) - 1;
+        y = (2 * (y - boundary.minY)) / (boundary.maxY - boundary.minY) - 1;
+        let vec = new Point(x, y);
+        vecs.push(vec);
+    }
+    return vecs;
+}
+
+
 
 // 计算插值
 function insertPts(vectors, width) {
@@ -357,10 +385,11 @@ function insertPts(vectors, width) {
     v3.setY(y);
     Points2.push(v3);
 
+    var linewidth;
     for (let i = 1; i < len - 1; i++) {
-        var linewidth = width - (width * 1) / len; //线性渐变
+        // linewidth = width - (width * 1) / len; //线性渐变
         // var linewidth = width * (len-1-i)/ len;//线性渐变
-        // var linewidth = width * i/ len;  //线性渐变
+        linewidth = width //线性渐变
 
         let vec1 = new Point();
         let vec2 = new Point();
@@ -569,8 +598,9 @@ function draw_three_objs(line, array_line, array_overlaptri, array_debug) {
     gl.useProgram(program.program)
 
 
-    //绘制原始剖分三角网
-    gl.uniform4fv(program.u_color, [0.0, 0.0, 1.0, 1.0]);
+
+    //绘制原始剖分三角形
+    gl.uniform4fv(program.u_color, [0.0, 0.2, 1.0, 0.7]);
     for (let i = 0; i < array_line.length; i++) {
         var riverBuffer = createBuffer(gl, new Float32Array(array_line[i]));
         bindAttribute(gl, riverBuffer, program.a_Position, 2);
@@ -578,22 +608,29 @@ function draw_three_objs(line, array_line, array_overlaptri, array_debug) {
         gl.drawArrays(gl.TRIANGLES, 0, n); //绘制多个三角形
     }
 
+    //绘制中心线
+    // gl.uniform4fv(program.u_color, [0.0, 0.5, 0.0, 0.5]);
+    gl.uniform4fv(program.u_color, [0.0, 0.9, 0.0, 1.0]);
+    var riverBuffer = createBuffer(gl, new Float32Array(line));
+    bindAttribute(gl, riverBuffer, program.a_Position, 2);
+    var n = line.length / 2;
+    gl.drawArrays(gl.LINE_STRIP, 0, n); //绘制DEBUG三角网    
+
+    // 绘制变色重叠三角形
+    if (array_overlaptri.length > 0) {
+        gl.uniform4fv(program.u_color, [1.0, 0.0, 0.0, 1.0]);
+        for (let i = 0; i < array_overlaptri.length; i++) {
+            var riverBuffer = createBuffer(gl, new Float32Array(array_overlaptri[i]));
+            bindAttribute(gl, riverBuffer, program.a_Position, 2);
+            var n = array_overlaptri[i].length / 2;
+            gl.drawArrays(gl.TRIANGLES, 0, n); //绘制多个三角形
+        }
+    }
+
 
     /*
-        // 绘制变色重叠三角形
-        if (array_overlaptri.length > 0) {
-            gl.uniform4fv(program.u_color, [1.0, 0.0, 0.0, 1.0]);
-            for (let i = 0; i < array_overlaptri.length; i++) {
-                var riverBuffer = createBuffer(gl, new Float32Array(array_overlaptri[i]));
-                bindAttribute(gl, riverBuffer, program.a_Position, 2);
-                var n = array_overlaptri[i].length / 2;
-                gl.drawArrays(gl.TRIANGLES, 0, n); //绘制多个三角形
-            }
-        }
-    */
-    /*
         //绘制三角网
-        gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 0.8]);
+        gl.uniform4fv(program.u_color, [0.8, 0.0, 0.0, 0.8]);
         for (let i = 0; i < array_debug.length; i++) {
             var riverBuffer = createBuffer(gl, new Float32Array(array_debug[i]));
             bindAttribute(gl, riverBuffer, program.a_Position, 2);
@@ -601,11 +638,6 @@ function draw_three_objs(line, array_line, array_overlaptri, array_debug) {
         }
     */
 
-    //绘制中心线
-    gl.uniform4fv(program.u_color, [0.0, 0.5, 0.0, 0.5]);
-    var riverBuffer = createBuffer(gl, new Float32Array(line));
-    bindAttribute(gl, riverBuffer, program.a_Position, 2);
-    var n = line.length / 2;
-    gl.drawArrays(gl.LINE_STRIP, 0, n); //绘制DEBUG三角网    
+
 
 }

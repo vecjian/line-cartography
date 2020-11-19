@@ -81,8 +81,8 @@ function douglasPeucker(coordinates, dMax) {
     });
 
     resCoor.forEach((item) => {
-        item.id = undefined;
-    })
-    console.log(resCoor);
+            item.id = undefined;
+        })
+        // console.log(resCoor);
     return resCoor;
 }

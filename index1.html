@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>forest</title>
+</head>
+
+<body>
+    <canvas id="webgl" width="600" height="600" style="height: auto; width: auto;"></canvas>
+
+    <script src="./data/network_1.js"></script>
+    <script src="./BinaryTree.js"></script>
+    <script src="./PointInTri.js"></script>
+    <script src="./lib/GL_Util.js"></script>
+
+    <script>
+        //河流网所有河段
+        let stroke_array = getMapStructure(originData, true);
+
+        function display_forest() {
+            let forest = new Forest();
+            forest.newForest(stroke_array);
+            forest.DrawForest();
+        }
+        display_forest();
+    </script>
+
+</body>
+
+</html>

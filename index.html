@@ -5,16 +5,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>a demo for draw river</title>
+    <title>singleLine</title>
 </head>
 
 <body>
-    <canvas id="webgl" width="600" height="600"></canvas>
+    <canvas id="webgl" width="600" height="600" style="height: auto; width: auto;"></canvas>
     <script src="./data/sourcedata.js"></script>
     <script src="./data/network_3.js"></script>
-    <script src="./data/network_1.js"></script>
     <script src="./data/forest.js"></script>
     <script src="./data/longLine.js"></script>
+    <script src="./data/longLine1.js"></script>
+    <script src="./data/longLine2.js"></script>
+    <script src="./data/3.js"></script>
 
     <script src="./lib/GL_Util.js"></script>
 
@@ -24,28 +26,19 @@
     <script src="./simplify.js"></script>
 
     <script>
-        //河流网所有河段
-        // let stroke_array = getMapStructure(originData);
         //长河段
-        let stroke_array = getMapStructure(longLine);
+        let stroke_array = getMapStructure(longLine, false);
+        let stroke_array1 = getMapStructure(longLine1, false);
+        let stroke_array2 = getMapStructure(bend_simplify, false);
+        // console.log(stroke_array2[0].points);
 
-        function display_forest() {
-            let forest = new Forest();
-            forest.newForest(stroke_array);
-            forest.DrawForest();
-        }
-        // display_forest();
 
         // 生成随机线条
-        // var pts = initLine(5);
-        // var p1 = new Point(0.3, 0);
-        // var p2 = new Point(0.6, 0);
-        // var p3 = new Point(0.2, 0.5);
-
-        // var p4 = new Point(0, 0);
-        // var p5 = new Point(1, 1);
-        // var p6 = new Point(0.8, -1);
-        // var pts = [p1, p2, p3];
+        var pts = initLine(5);
+        var p1 = new Point(0.3, 0);
+        var p2 = new Point(0.6, 0);
+        var p3 = new Point(0.2, 0.5);
+        var p4 = new Point(0, 0);
 
         // console.log(pts);
         // draw(pts, 0.1);
@@ -54,7 +47,12 @@
         // var simplify_points = douglasPeucker(stroke_array[5].points, 0.0008);
         // //绘制线条
         // draw(simplify_points, 0.05);
-        draw(stroke_array[0].points, 0.05);
+        // draw(stroke_array[0].points.slice(850, 1000), 0.08);
+        // draw(douglasPeucker(stroke_array2[0].points, 0.01), 0.03);
+        draw(douglasPeucker(stroke_array2[0].points, 0.000006), 0.0008);
+        // draw(stroke_array2[0].points, 0.0008);
+        // 绘制封闭的线条
+        // draw(pts, 0.08);
     </script>
 </body>
 
