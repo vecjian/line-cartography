@@ -78,6 +78,10 @@ function draw_debug_Trinet(points, width) {
         tri_xy.push(toXYArray(arr[j])); //将三角形坐标转换成xy,数组
     }
 
+    for (var i = 0; i < tri_xy.length; i++) {
+        tri_xy[i] = convertCor(tri_xy[i]);
+    }
+    // tri_xy = convertCor(tri_xy);
     return tri_xy;
     // 绘制三角网
     // drawTriNet(tri_xy); //黑色边框

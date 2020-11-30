@@ -17,6 +17,7 @@
     <script src="./data/longLine1.js"></script>
     <script src="./data/longLine2.js"></script>
     <script src="./data/3.js"></script>
+    <script src="./data/generalization.js"></script>
 
     <script src="./lib/GL_Util.js"></script>
 
@@ -26,13 +27,12 @@
     <script src="./simplify.js"></script>
 
     <script>
-        //长河段
-        let stroke_array = getMapStructure(longLine, false);
-        let stroke_array1 = getMapStructure(longLine1, false);
-        let stroke_array2 = getMapStructure(bend_simplify, false);
+        //长河段,转换了计算的顺序
+        // let stroke_array = getMapStructure(longLine, false);
+        // let stroke_array1 = getMapStructure(longLine1, false);
+        // let stroke_array2 = getMapStructure(bend_simplify, false);
+        let stroke_array2 = getMapStructure(generalizationLine, false);
         // console.log(stroke_array2[0].points);
-
-
         // 生成随机线条
         var pts = initLine(5);
         var p1 = new Point(0.3, 0);
@@ -49,7 +49,7 @@
         // draw(simplify_points, 0.05);
         // draw(stroke_array[0].points.slice(850, 1000), 0.08);
         // draw(douglasPeucker(stroke_array2[0].points, 0.01), 0.03);
-        draw(douglasPeucker(stroke_array2[0].points, 0.000006), 0.0008);
+        draw(douglasPeucker(stroke_array2[0].points, 0.000006), 0.0007);
         // draw(stroke_array2[0].points, 0.0008);
         // 绘制封闭的线条
         // draw(pts, 0.08);

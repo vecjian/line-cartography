@@ -628,16 +628,12 @@ function draw_three_objs(line, array_line, array_overlaptri, array_debug) {
     }
 
 
-    /*
-        //绘制三角网
-        gl.uniform4fv(program.u_color, [0.8, 0.0, 0.0, 0.8]);
-        for (let i = 0; i < array_debug.length; i++) {
-            var riverBuffer = createBuffer(gl, new Float32Array(array_debug[i]));
-            bindAttribute(gl, riverBuffer, program.a_Position, 2);
-            gl.drawArrays(gl.LINE_LOOP, 0, 3); //绘制DEBUG三角网    
-        }
-    */
 
-
-
+    //绘制三角网
+    gl.uniform4fv(program.u_color, [0.8, 0.0, 0.0, 0.8]);
+    for (let i = 0; i < array_debug.length; i++) {
+        var riverBuffer = createBuffer(gl, new Float32Array(array_debug[i]));
+        bindAttribute(gl, riverBuffer, program.a_Position, 2);
+        gl.drawArrays(gl.LINE_LOOP, 0, 3); //绘制DEBUG三角网    
+    }
 }
