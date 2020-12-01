@@ -25,6 +25,8 @@
     <script src="./BinaryTree.js"></script>
     <script src="./drawLine.js"></script>
     <script src="./simplify.js"></script>
+    <script src="./symbol.js"></script>
+
 
     <script>
         //长河段,转换了计算的顺序
@@ -49,7 +51,9 @@
         // draw(simplify_points, 0.05);
         // draw(stroke_array[0].points.slice(850, 1000), 0.08);
         // draw(douglasPeucker(stroke_array2[0].points, 0.01), 0.03);
+
         draw(douglasPeucker(stroke_array2[0].points, 0.000006), 0.0007);
+        drawDoubleLine()
         // draw(stroke_array2[0].points, 0.0008);
         // 绘制封闭的线条
         // draw(pts, 0.08);

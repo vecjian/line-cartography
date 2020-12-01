@@ -216,7 +216,7 @@ class BinaryTree {
     }
 
     draw(points, width, node) {
-        let pos = insertPts(points, width);
+        let pos = insertPts(points, width,true);
         let branch = {};
         branch.position = toXYArray(ptsToTriangles(pos.pts1, pos.pts2)); //转化为三角形的xy,坐标序列
         branch.startWid = pos.startWidth;
@@ -327,8 +327,8 @@ function transform(points) {
         let x = points[i][0];
         let y = points[i][1];
         //转换到（-1,1）之间
-        x = (2 * (x - boundary.minX)) / (boundary.maxX - boundary.minX) - 1;
-        y = (2 * (y - boundary.minY)) / (boundary.maxY - boundary.minY) - 1;
+        x = ((2 * (x - boundary.minX)) / (boundary.maxX - boundary.minX) - 1);
+        y = ((2 * (y - boundary.minY)) / (boundary.maxY - boundary.minY) - 1);
         let vec = new Point(x, y);
         vecs.push(vec);
     }
@@ -352,8 +352,8 @@ function transform1(points) {
 
 
 
-// 计算插值
-function insertPts(vectors, width) {
+// 计算插值,isGradient表示是否需要渐变
+function insertPts(vectors, width,isGradient) {
     if (vectors.length == 1) {
         vectors = [];
         return vectors;
@@ -387,9 +387,14 @@ function insertPts(vectors, width) {
 
     var linewidth;
     for (let i = 1; i < len - 1; i++) {
-        // linewidth = width - (width * 1) / len; //线性渐变
-        // var linewidth = width * (len-1-i)/ len;//线性渐变
-        linewidth = width //线性渐变
+
+        //判断是否需要渐变
+        if(isGradient){
+            linewidth = width - (width * 1) / len; //线性渐变
+            // var linewidth = width * (len-1-i)/ len;//线性渐变
+        }else{
+            linewidth = width //线性渐变
+        }
 
         let vec1 = new Point();
         let vec2 = new Point();
@@ -451,6 +456,7 @@ function insertPts(vectors, width) {
 
     var segment = {}; //两条直线坐标数组,及宽度
 
+    // 左直线：Points1；右直线：Points2.
     segment.pts1 = Points1;
     segment.pts2 = Points2;
     segment.startWidth = linewidth; //保留结尾处的宽度
@@ -636,4 +642,38 @@ function draw_three_objs(line, array_line, array_overlaptri, array_debug) {
         bindAttribute(gl, riverBuffer, program.a_Position, 2);
         gl.drawArrays(gl.LINE_LOOP, 0, 3); //绘制DEBUG三角网    
     }
+}
+
+
+//由单线绘制双线
+funciton drawDoubleLine (trianglestrip){
+    var gl = getContextgl();
+    gl.clearColor(0.95, 0.95, 0.95, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    var program = createProgram(gl, v_Shader, f_Shader);
+    gl.useProgram(program.program)
+
+    //绘制双线
+    let leftStrip = trianglestrip.leftStrip;
+    let rightStrip = trianglestrip.rightStrip;
+
+    gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 1.0]);
+    var riverBuffer = createBuffer(gl, new Float32Array(leftStrip));
+    bindAttribute(gl, riverBuffer, program.a_Position, 2);
+    var n = leftStrip.length / 2;
+    gl.drawArrays(gl.LINE_STRIP, 0, n); 
+
+    var riverBuffer = createBuffer(gl, new Float32Array(rightStrip));
+    bindAttribute(gl, riverBuffer, program.a_Position, 2);
+    var n = rightStrip.length / 2;
+    gl.drawArrays(gl.LINE_STRIP, 0, n); 
+
+    // 绘制中心线
+    let centralStrip = trianglestrip.centralStrip;
+    gl.uniform4fv(program.u_color, [1.0, 1.0, 1.0, 1.0]);
+    var riverBuffer = createBuffer(gl, new Float32Array(centralStrip));
+    bindAttribute(gl, riverBuffer, program.a_Position, 2);
+    var n = centralStrip.length / 2;
+    gl.drawArrays(gl.LINE_STRIP, 0, n); 
+
 }
