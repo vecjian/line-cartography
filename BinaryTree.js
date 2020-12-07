@@ -763,20 +763,20 @@ function drawBorder(trianglestrip, debug, central) {
   let insideStrip = trianglestrip.insideStrip;
   let outsideStrip = trianglestrip.outsideStrip;
 
-  gl.uniform4fv(program.u_color, [0.5, 0.5, 0.5, 1.0]);
-  var riverBuffer = createBuffer(gl, new Float32Array(insideStrip));
+  gl.uniform4fv(program.u_color, [0.7, 0.7, 0.7, 1.0]);
+  riverBuffer = createBuffer(gl, new Float32Array(outsideStrip));
   bindAttribute(gl, riverBuffer, program.a_Position, 2);
-  n = insideStrip.length / 2;
+  n = outsideStrip.length / 2;
   gl.drawArrays(gl.TRIANGLES, 0, n);
   if (debug) {
     gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0]);
     gl.drawArrays(gl.LINE_STRIP, 0, n);
   }
 
-  gl.uniform4fv(program.u_color, [0.5, 0.5, 0.5, 0.5]);
-  riverBuffer = createBuffer(gl, new Float32Array(outsideStrip));
+  gl.uniform4fv(program.u_color, [0.5, 0.5, 0.5, 1.0]);
+  var riverBuffer = createBuffer(gl, new Float32Array(insideStrip));
   bindAttribute(gl, riverBuffer, program.a_Position, 2);
-  n = outsideStrip.length / 2;
+  n = insideStrip.length / 2;
   gl.drawArrays(gl.TRIANGLES, 0, n);
   if (debug) {
     gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0]);
@@ -789,6 +789,6 @@ function drawBorder(trianglestrip, debug, central) {
     riverBuffer = createBuffer(gl, new Float32Array(trianglestrip.centralLine));
     bindAttribute(gl, riverBuffer, program.a_Position, 2);
     n = trianglestrip.centralLine.length / 2;
-    gl.drawArrays(gl.LINES, 0, n);
+    gl.drawArrays(gl.LINE_STRIP, 0, n);
   }
 }

@@ -7,9 +7,9 @@ function border(borderPoints, width) {
 
   //   计算双线的坐标串
   borderStrips.insideStrip = toXYArray(
-    ptsToTriangles(borderPoints, cors1.pts2)
+    ptsToTriangles(borderPoints, cors1.pts1)
   );
-  borderStrips.outsideStrip = toXYArray(ptsToTriangles(cors1.pts2, cors2.pts2));
+  borderStrips.outsideStrip = toXYArray(ptsToTriangles(cors1.pts1, cors2.pts1));
   borderStrips.centralLine = toXYArray(borderPoints);
   return borderStrips;
 }
