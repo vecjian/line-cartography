@@ -21,6 +21,8 @@ function generateBorderStrip(borderPoints, width) {
     toXYArray(ptsToTriangles(cors1.pts2, cors2.pts2))
   );
   borderStrips.centralLine = convertCor1(toXYArray(borderPoints));
+  // 索引值
+  borderStrips.indexArr = getTriangles(borderPoints);
   return borderStrips;
 }
 
@@ -33,7 +35,7 @@ function getBorder(data) {
     var pt = new Point(pts[j][0], pts[j][1]);
     points.push(pt);
   }
-  console.log(points);
+  console.log(j);
   return points;
 }
 
@@ -94,12 +96,64 @@ function getTriangles(pts) {
   }
 
   var triangles = earcut(arr);
-  console.log(triangles);
+  // console.log(triangles);
+  return triangles;
+}
 
-  let cor = [];
-  for (var j = 0; j < triangles.length; j++) {
-    console.log(triangles[j]);
-    cor.push(pts[triangles[j]]);
+//创建索引buffer
+function createIndexBuffer(gl, indices) {
+  var indexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  gl.bufferData(
+    gl.ELEMENT_ARRAY_BUFFER,
+    new Uint16Array(indices),
+    gl.STATIC_DRAW
+  );
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+  return indexBuffer;
+}
+
+function drawBorderArea(trianglestrip, debug, central) {
+  let gl = getContextgl3();
+  gl.clearColor(0.1, 0.95, 0.95, 1);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  var program = createProgram(gl, v_Shader, f_Shader);
+  gl.useProgram(program.program);
+
+  //绘制双线
+  let insideStrip = trianglestrip.insideStrip;
+  let outsideStrip = trianglestrip.outsideStrip;
+
+  gl.uniform4fv(program.u_color, [0.7, 0.7, 0.7, 1.0]);
+  riverBuffer = createBuffer(gl, new Float32Array(outsideStrip));
+  bindAttribute(gl, riverBuffer, program.a_Position, 2);
+  var n = outsideStrip.length / 2;
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+  if (debug) {
+    gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0]);
+    gl.drawArrays(gl.LINE_STRIP, 0, n);
   }
-  return cor;
+
+  gl.uniform4fv(program.u_color, [0.5, 0.5, 0.5, 1.0]);
+  var riverBuffer = createBuffer(gl, new Float32Array(insideStrip));
+  bindAttribute(gl, riverBuffer, program.a_Position, 2);
+  n = insideStrip.length / 2;
+  gl.drawArrays(gl.TRIANGLES, 0, n);
+  if (debug) {
+    gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0]);
+    gl.drawArrays(gl.LINE_STRIP, 0, n);
+  }
+
+  if (central) {
+    // 绘制中心线
+    gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 1.0]);
+    //绑定坐标
+    riverBuffer = createBuffer(gl, new Float32Array(trianglestrip.centralLine));
+    bindAttribute(gl, riverBuffer, program.a_Position, 2);
+    //绑定索引值
+    var indexBuffer = createIndexBuffer(gl, trianglestrip.indexArr);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    n = trianglestrip.indexArr.length;
+    gl.drawElements(gl.TRIANGLES, n, gl.UNSIGNED_SHORT, 0);
+  }
 }
