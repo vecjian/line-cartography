@@ -2,92 +2,105 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
 </head>
 
 <body>
-  <canvas id="webgl" width="200" height="200" style="height: auto; width: auto"></canvas>
-  <canvas id="paint" width="200" height="200" style="height: auto; width: auto"></canvas>
-  <canvas id="paint1" width="200" height="200" style="height: auto; width: auto"></canvas>
-  <script src="./PointInTri.js"></script>
-  <script src="./symbol.js"></script>
-  <script src="./boundaryLine.js"></script>
-  <script src="./BinaryTree.js"></script>
-  <script src="./lib/GL_Util.js"></script>
-  <script src="./data/network_1.js"></script>
+    <canvas id="webgl" width="400" height="400" style="height: auto; width: auto"></canvas>
+    <canvas id="paint" width="400" height="400" style="height: auto; width: auto"></canvas>
+    <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
+    <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas>
 
-  <script>
-    // var pts = initLine(5);
-    //初始化非封闭线段
-    function initcentralLine(m, n) {
-      const a = 0.05;
-      var vectors = [];
-      for (var i = 0; i < 20; i++) {
-        let point = new Point(m, n);
-        vectors.push(point);
-        m = m + a;
-        n = n + a;
-      }
-      return vectors;
-    }
+    <script src="./PointInTri.js"></script>
+    <script src="./symbol.js"></script>
+    <script src="./boundaryLine.js"></script>
+    <script src="./BinaryTree.js"></script>
+    <script src="./lib/GL_Util.js"></script>
+    <script src="./lib/earcut.dev.js"></script>
+    <script src="./data/network_1.js"></script>
+    <script src="./data/border_simplify.js"></script>
 
-    //初始化封闭线段,境界线必须要是封闭的吗？
-    function initclosedLine() {
-      var vectors = [];
-      var point = new Point(-0.4, -0.4);
-      var point1 = new Point(-0.4, 0.4);
-      var point2 = new Point(0.8, 0);
-      var point3 = new Point(0.5, -0.4);
-      vectors.push(point);
-      vectors.push(point1);
-      vectors.push(point2);
-      vectors.push(point3);
-      vectors.push(point);
-      return vectors;
-    }
+    <script>
+        // var pts = initLine(5);
+        //初始化非封闭线段
+        function initcentralLine(m, n) {
+            const a = 0.05;
+            var vectors = [];
+            for (var i = 0; i < 20; i++) {
+                let point = new Point(m, n);
+                vectors.push(point);
+                m = m + a;
+                n = n + a;
+            }
+            return vectors;
+        }
 
-    // 双线
-    function doubleLine() {
-      // 初始化中心线坐标
-      // let points = initcentralLine(-0.2, -0.2);
-      let points = initclosedLine(-0.2, -0.2);
-      let triangleStrip = generateDoubleLine(points, 0.05);
-      drawDoubleLine(triangleStrip, false);
-    }
+        //初始化封闭线段,境界线必须要是封闭的吗？
+        function initclosedLine() {
+            var vectors = [];
+            var point = new Point(-0.4, -0.4);
+            var point1 = new Point(-0.4, 0.4);
+            var point2 = new Point(0.8, 0);
+            var point3 = new Point(0.5, -0.4);
+            vectors.push(point);
+            vectors.push(point1);
+            vectors.push(point2);
+            vectors.push(point3);
+            vectors.push(point);
+            vectors.push(point1);
+            return vectors;
+        }
 
-    // 三线
-    function threeLine() {
-      // 初始化中心线坐标
-      let points = initcentralLine(-0.2, -0.2);
-      let triangleStrip = generateDoubleLine(points, 0.05);
-      lines(triangleStrip, false, true);
-    }
+        // 双线
+        function doubleLine() {
+            // 初始化中心线坐标
+            // let points = initcentralLine(-0.2, -0.2);
+            let innitline = initclosedLine(-0.2, -0.2);
+            let triangleStrip = generateDoubleLine(innitline, 0.05);
+            var gl = getContextgl();
+            lines(gl, triangleStrip, false, false);
+        }
 
-    // 境界线
-    function boundaryLine() { }
-    //河流网所有河段
-    let stroke_array = getMapStructure(originData, true);
-    function display_forest() {
-      let forest = new Forest();
-      forest.newForest(stroke_array);
-      forest.DrawForest();
-    }
+        // 三线
+        function threeLine() {
+            // 初始化中心线坐标
+            let innitline = initcentralLine(-0.2, -0.2);
+            let triangleStrip = generateDoubleLine(innitline, 0.05);
+            var gl = getContextgl1();
+            lines(gl, triangleStrip, false, true);
+        }
 
-    function borderStrip() {
-      //初始化界线
-      let points = initclosedLine();
-      let triangleStrip = border(points, 0.08);
-      drawBorder(triangleStrip, false, true);
-    }
-    //河流网
-    borderStrip();
-    display_forest();
-    doubleLine();
-    // threeLine();
+        // 境界线
+        function boundaryLine() {}
+        //河流网所有河段
+        let stroke_array = getMapStructure(originData, true);
 
-  </script>
+        function display_forest() {
+            let forest = new Forest();
+            forest.newForest(stroke_array);
+            forest.DrawForest();
+        }
+
+        function borderStrip() {
+            //初始化界线
+            getArea(points);
+            // let points = initclosedLine();
+            let triangleStrip = generateBorderStrip(points, 0.15);
+            drawBorder(triangleStrip, false, true);
+        }
+
+
+        //河流网
+        //获取数据
+        var points = getBorder(border);
+        getTriangles(points);
+        borderStrip();
+        display_forest();
+        doubleLine();
+        threeLine();
+    </script>
 </body>
 
 </html>
