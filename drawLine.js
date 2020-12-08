@@ -15,28 +15,14 @@ function initLine(Pt_num) {
     return pts_vector;
 }
 
-
 // 绘制，检测，重绘
-function detect(pts, width) {
-    // var pts = initLine(50);
-    // let width = 0.05;
-
-    // draw_line_Tris(pts, width); //绘制线
-    // draw_debug_Trinet(pts, width); //绘制debug三角网
-    // draw_Triobjs(pts, width); //绘制重叠三角形
-}
-
 function draw(points, width) {
-    // let pos = insertPts(points, width);
-    // let array = toXYArray(ptsToTriangles(pos.pts1, pos.pts2)); //得到所有组成线段的三角形坐标
-
     //计算了很多遍插值
 
     let line = toXYArray(transform1(points));
     let array_line = draw_line_Tris(points, width); //原始剖分三角形坐标
     let array_overlaptri = draw_Triobjs(points, width); // 重叠三角形坐标
     let array_debug = draw_debug_Trinet(points, width); //debug三角网坐标
-
 
     /*
     let line = toXYArray(points);
@@ -60,8 +46,6 @@ function draw_line_Tris(points, width) {
     arr.push(array);
 
     return arr;
-    // 绘制三角形
-    // drawRiver(arr, [0.0, 0.0, 1.0, 1.0]);
 }
 
 //  绘制debug三角网
@@ -118,7 +102,6 @@ function get_Overlap_Tris(triangles) {
     for (var i = 0; i < len; i++) {
         //triangles[j]不与前面的三角形发生重叠
         for (var j = i + 1; j < len && !triangles[j].tag; j++) {
-
             // 判断两个三角形的位置关系
             flag = Trianglesoverlap(triangles[i], triangles[j]);
 
@@ -133,7 +116,7 @@ function get_Overlap_Tris(triangles) {
         }
     }
     if (overlap_Tris.length < 1) {
-        console.log("折线没有重叠部分");
+        console.log('折线没有重叠部分');
         overlap_Tris.length = 0; //清空数组
     }
     return overlap_Tris;
@@ -143,7 +126,7 @@ function get_Overlap_Tris(triangles) {
 function Tris_to_XYarr(triangles) {
     let len = triangles.length;
     if (triangles.length < 1) {
-        console.log("没有重叠三角形");
+        console.log('没有重叠三角形');
         triangles.length = 0; //清空数组
         return triangles;
     }
@@ -165,10 +148,15 @@ function Tris_to_XYarr(triangles) {
 function convertCor(xyArr) {
     let arr = [];
     for (var i = 0; i < xyArr.length; i = i + 2) {
-        let x = ((2 * (xyArr[i] - boundary.minX)) / (boundary.maxX - boundary.minX) - 1);
+        let x =
+            ((2 * (xyArr[i] - boundary.minX)) / (boundary.maxX - boundary.minX) - 1) *
+            0.95;
         arr.push(x);
         // console.log(xyArr[i + 1])
-        let y = ((2 * (xyArr[i + 1] - boundary.minY)) / (boundary.maxY - boundary.minY) - 1);
+        let y =
+            ((2 * (xyArr[i + 1] - boundary.minY)) / (boundary.maxY - boundary.minY) -
+                1) *
+            0.95;
         arr.push(y);
     }
     return arr;
