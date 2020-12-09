@@ -146,7 +146,7 @@ function drawBorderArea(trianglestrip, debug, central) {
 
     if (central) {
         // 绘制中心线
-        gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 1.0]);
+        gl.uniform4fv(program.u_color, [1.0, 1.0, 1.0, 1.0]);
         //绑定坐标
         riverBuffer = createBuffer(gl, new Float32Array(trianglestrip.centralLine));
         bindAttribute(gl, riverBuffer, program.a_Position, 2);
