@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <canvas id="webgl" width="400" height="400" style="height: auto; width: auto"></canvas>
+    <canvas id="webgl" width="400" height="300" style="height: auto; width: auto"></canvas>
     <canvas id="paint" width="400" height="400" style="height: auto; width: auto"></canvas>
     <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
     <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas>
@@ -27,6 +27,7 @@
     <script src="./data/border.js"></script>
     <script src="./data/generalization.js"></script>
     <script src="./drawLine.js"></script>
+    <script src="./index.js"></script>
 
     <script>
         // var pts = initLine(5);
@@ -117,11 +118,13 @@
             clearBoundary();
         }
         //河流网
-        borderStrip();
+        // borderStrip();
         display_forest();
-        doubleLine();
-        threeLine();
-        oneLine();
+        // doubleLine();
+        // threeLine();
+        // oneLine();
+
+        init();
     </script>
 </body>
 
