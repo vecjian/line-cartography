@@ -83,7 +83,7 @@
         }
 
         //二叉树渐变河流网
-        let stroke_array = getMapStructure(originData, true);
+        // let stroke_array = getMapStructure(originData, false);
         let stroke_array1 = getMapStructure(originData, false);
 
         function display_forest() {
@@ -97,7 +97,7 @@
 
         //河流网的冲突检测
         function riverNet() {
-            get_Whole_arr(stroke_array1, 0.0015);
+            get_Whole_arr(stroke_array1, 0.0011);
             clearBoundary();
         }
 
@@ -111,7 +111,7 @@
 
 
         //河流网
-        display_forest();
+        // display_forest();
         // borderStrip();
         // doubleLine();
         // threeLine();

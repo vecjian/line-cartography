@@ -3,7 +3,7 @@
 // 河段指的是从河源到汇口之间或者汇口和汇口之间的河流段
 let widLevel = {
     // level1: 0.0015,
-    level1: 0.03,
+    level1: 0.0015,
     level2: 0.015,
     level3: 0.01,
     level4: 0.008,
@@ -41,7 +41,6 @@ function getMapStructure(data, istransformed) {
             if (istransformed) {
                 // 将（x,y）坐标转换成Point结构，绘制树状河系
                 stroke.points = transform(line.geometry.coordinates)
-                    // console.log(stroke.points);
             } else {
                 // 先不转换，判断冲突，改变计算的顺序
                 var pts = line.geometry.coordinates
@@ -50,7 +49,6 @@ function getMapStructure(data, istransformed) {
                     stroke.points.push(pt)
                 }
             }
-            0
             strokes.push(stroke)
         }
     }
@@ -214,22 +212,28 @@ class BinaryTree {
     }
 
     draw(points, width, node) {
+        let obj = get_Whole_Binaryarr(points, width)
         let pos = insertPts(points, width, true)
-        let branch = {}
+        node.startWid = pos.startWidth //小于startWid
+        wholeArr.centralLine.push(obj.centralLine)
+        wholeArr.originStrip.push(obj.centralLine)
+        wholeArr.overlapTris.push(obj.centralLine)
+        wholeArr.newCentralLine.push(obj.centralLine)
+        wholeArr.debugTriNet.push(obj.centralLine)
+        wholeArr.newTriStrip.push(obj.centralLine)
 
-        branch.position = toXYArray(ptsToTriangles(pos.pts1, pos.pts2)) //转化为三角形的xy,坐标序列
-        branch.startWid = pos.startWidth
-
-        let array = branch.position
-        wholeArr.push(array)
-
-        node.startWid = branch.startWid //小于startWid
-
-        drawRiver(wholeArr)
+        draw_debug_riverNet(wholeArr)
     }
 }
 
-let wholeArr = []
+let wholeArr = {
+    centralLine: [],
+    originStrip: [],
+    overlapTris: [],
+    newCentralLine: [],
+    debugTriNet: [],
+    newTriStrip: [],
+}
 
 //构造森林
 class Forest {
@@ -564,4 +568,31 @@ function get_Whole_arr(strokes, width) {
     }
 
     draw_debug_riverNet(object)
+}
+
+//Draw with BinaryTree
+function get_Whole_Binaryarr(points, width) {
+    let centralLine = toXYArray(transform1(points)) //坐标转换
+
+    let originStrip = draw_line_Tris(points, width) //原始剖分三角形坐标
+
+    let obj = draw_Triobjs(points, width) // 重叠三角形坐标
+    let overlapTris = obj.array
+
+    let newCentralLine = toXYArray(transform1(obj.newPts)) //已经删除处理后的坐标
+
+    let debugTriNet = draw_debug_Trinet(points, width) //debug三角网坐标
+
+    let newTriStrip = draw_line_Tris(obj.newPts, width) //删除重叠部分三角形的坐标条带
+
+    let object = {
+        centralLine,
+        originStrip,
+        overlapTris,
+        newCentralLine,
+        debugTriNet,
+        newTriStrip,
+    }
+
+    return object
 }
