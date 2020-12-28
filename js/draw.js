@@ -87,6 +87,7 @@ function drawRiver(array, color) {
 
   gl.uniform4fv(program.u_color, color);
   for (let i = 0; i < array.length; i++) {
+    // for (let i = 0; i < 1; i++) {
     var riverBuffer = createBuffer(gl, new Float32Array(array[i]));
     bindAttribute(gl, riverBuffer, program.a_Position, 2);
     var n = array[i].length / 2;
@@ -169,7 +170,7 @@ function draw_three_objs(
       riverBuffer = createBuffer(gl, new Float32Array(newtriangleStrip[i]));
       bindAttribute(gl, riverBuffer, program.a_Position, 2);
       n = newtriangleStrip[i].length / 2;
-      // gl.drawArrays(gl.TRIANGLES, 0, n); //绘制多个三角形
+      gl.drawArrays(gl.TRIANGLES, 0, n); //绘制多个三角形
     }
   }
 

@@ -2,7 +2,8 @@
 // 二叉树的节点为每一个河段
 // 河段指的是从河源到汇口之间或者汇口和汇口之间的河流段
 let widLevel = {
-  level1: 0.04,
+  // level1: 0.0015,
+  level1: 0.03,
   level2: 0.015,
   level3: 0.01,
   level4: 0.008,
@@ -45,13 +46,12 @@ function getMapStructure(data, istransformed) {
         // 先不转换，判断冲突，改变计算的顺序
         var pts = line.geometry.coordinates;
         for (var j = 0; j < pts.length; j++) {
-          var pt = new Point(pts[j][0], pts[j][1]);
+          var pt = new Point(pts[j][0], pts[j][1], j); //id也添加进去
           stroke.points.push(pt);
         }
       }
       strokes.push(stroke);
     }
-    // console.log(strokes);
   }
 }
 
@@ -167,8 +167,8 @@ class BinaryTree {
   //绘制树
   DrawTree() {
     this.DrawNode(this.root);
-    let color = [0.0, 0.0, 1.0, 1.0];
-    drawRiver(wholeArr, color);
+    // let color = [0.0, 0.0, 1.0, 1.0];
+    // drawRiver(wholeArr, color);
   }
 
   //遍历绘制
@@ -177,6 +177,7 @@ class BinaryTree {
       // drawRiver(wholeArr);//所有树枝都在一个数组里边画
       return; //递归基
     }
+    //判断是虚节点
     if (!node.virtual) {
       if (node == this.root) {
         switch (node.level) {
@@ -197,7 +198,6 @@ class BinaryTree {
             break;
         }
         this.draw(node.points, node.endWid, node); //当为根节点时，设置开始节点
-        // this.draw(node.points, 1,node); //当为根节点时，设置开始节点
       } else {
         let newNode = new Node();
         newNode = node.parent;
@@ -359,12 +359,12 @@ function transform1(points) {
   return vecs;
 }
 
-//添加id,points是Point类数组
+//添加id,points是(x,y)数组
 function addID(points) {
   let vecs = [];
   for (let i = 0; i < points.length; i++) {
-    let x = points[i].x;
-    let y = points[i].y;
+    let x = points[i][0];
+    let y = points[i][1];
     let vec = new Point(x, y, i);
     vecs.push(vec);
   }

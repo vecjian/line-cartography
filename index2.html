@@ -5,11 +5,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Document</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
 </head>
 
 <body>
-  <!-- <canvas id="canvas" width="400" height="300" style="height: auto; width: auto"></canvas>
-  <canvas id="paint" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="canvas" width="400" height="300" style="height: auto; width: auto"></canvas>
+  <!-- <canvas id="paint" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas> -->
   <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
@@ -48,33 +53,6 @@
       return vectors;
     }
 
-    //初始化封闭线段,境界线必须要是封闭的吗？
-    function initclosedLine() {
-      var vectors = [];
-      var point = new Point(-0.7, 0, 0);
-      var point1 = new Point(-0.5, -0.6);
-      var point2 = new Point(0.0, 0.0);
-      var point3 = new Point(0.5, 0.4);
-      var point4 = new Point(0.8, 0.6);
-      var point5 = new Point(0.6, 0.9);
-      var point6 = new Point(0.0, 0.95);
-      var point7 = new Point(-0.6, 0.5);
-      var point8 = new Point(-0.8, 0.4);
-      vectors.push(point);
-      vectors.push(point1);
-      vectors.push(point2);
-      vectors.push(point3);
-      vectors.push(point4);
-      vectors.push(point5);
-      vectors.push(point6);
-      vectors.push(point7);
-      vectors.push(point8)
-      vectors.push(point);
-
-      let pts = smoothLine(vectors, 1)
-      return pts;
-    }
-
     // 双线
     function doubleLine() {
       // 初始化中心线坐标
@@ -100,9 +78,9 @@
     function display_forest() {
       clearBoundary();
       let forest = new Forest();
-      forest.newForest(stroke_array[0]);
+      forest.newForest(stroke_array);
       forest.DrawForest();
-      clearBoundary();
+      // clearBoundary();
     }
 
     //境界线
@@ -118,13 +96,14 @@
 
     //单线看效果
     function oneLine() {
-      clearBoundary();
+      // clearBoundary();
       let stroke_array2 = getMapStructure(generalizationLine, false);
-      draw_detect(stroke_array2[0].points, 0.0015);
+      draw_detect(stroke_array[1].points, 0.0015);
       clearBoundary();
     }
+
     //河流网
-    // display_forest();
+    display_forest();
     // borderStrip();
     // doubleLine();
     // threeLine();

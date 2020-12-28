@@ -89,7 +89,6 @@ function draw_Triobjs(points, width) {
   let pos = insertPts(points, width);
   let array = get_Tris(pos.pts1, pos.pts2); //得到所有组成线段的三角形坐标
   let overlapTris = get_Overlap_Tris(array, points); //找出所有产生重叠的三角形
-  // console.log(overlapTris.overlap_Tris);
   let newPts = overlapTris.newPts;
   array = Tris_to_XYarr(overlapTris.overlap_Tris); //将三角形坐标转换成xy数组
 
@@ -107,7 +106,8 @@ function get_Overlap_Tris(triangles, points) {
   // 保存找到的有位置重叠的三角形
   let overlap_Tris = [];
   var flag = false;
-  var newPts = addID(points); //添加id
+  // var newPts = addID(points); //添加id
+  var newPts = points; //添加id
   for (var i = 0; i < len; i++) {
     //triangles[j]不与前面的三角形发生重叠
     for (var j = i + 1; j < len && !triangles[j].tag; j++) {
@@ -148,7 +148,6 @@ function deletePts(points, start, end) {
       pts.push(points[i]);
     }
   }
-  // console.log(pts.length);
   return pts;
 }
 
