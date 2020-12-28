@@ -14,18 +14,21 @@
   <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas> -->
   <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
 
+  <!-- <script src="./js/."></script> -->
+  <script src="./lib/earcut.dev.js"></script>
+
+  <script src="./data/network_1.js"></script>
+  <script src="./data/border_simplify.js"></script>
+  <script src="./data/border_simplify1.js"></script>
+  <script src="./data/border.js"></script>
+  <script src="./data/generalization.js"></script>
+
+  <script src="./js/draw.js"></script>
   <script src="./js/PointInTri.js"></script>
   <script src="./js/symbol.js"></script>
   <script src="./js/boundaryLine.js"></script>
   <script src="./js/BinaryTree.js"></script>
-  <!-- <script src="./lib/GL_Util.js"></script> -->
-  <script src="./lib/earcut.dev.js"></script>
-  <script src="./data/network_1.js"></script>
-  <script src="./data/border_simplify.js"></script>
   <script src="./js/smoothLine.js"></script>
-  <script src="./data/border_simplify1.js"></script>
-  <script src="./data/border.js"></script>
-  <script src="./data/generalization.js"></script>
   <script src="./js/drawLine.js"></script>
   <script src="./js/index.js"></script>
   <script src="./js/GL_Util1.js"></script>
@@ -91,13 +94,13 @@
       lines(gl, triangleStrip, true, false);
     }
 
-    //河流网所有河段
+    //二叉树渐变河流网
     let stroke_array = getMapStructure(originData, true);
 
     function display_forest() {
       clearBoundary();
       let forest = new Forest();
-      forest.newForest(stroke_array);
+      forest.newForest(stroke_array[0]);
       forest.DrawForest();
       clearBoundary();
     }
@@ -117,7 +120,7 @@
     function oneLine() {
       clearBoundary();
       let stroke_array2 = getMapStructure(generalizationLine, false);
-      draw(stroke_array2[0].points, 0.0008);
+      draw_detect(stroke_array2[0].points, 0.0015);
       clearBoundary();
     }
     //河流网
