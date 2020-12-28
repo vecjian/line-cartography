@@ -1,3 +1,4 @@
+// test:解决线冲突
 // 1.绘制线
 // 2.绘制三角网
 // 3.绘制变色后的三角形
@@ -15,28 +16,46 @@ function initLine(Pt_num) {
   return pts_vector;
 }
 
-// 绘制，检测，重绘
-function draw(points, width) {
+// 绘制，检测，重绘,para:points:Point类
+function draw_detect(points, width) {
   //计算了很多遍插值
-  let line = toXYArray(transform1(points));
+  // let pts = transform1(points); //转换为Point数组
+  let line = toXYArray(transform1(points)); //坐标转换
+
   let array_line = draw_line_Tris(points, width); //原始剖分三角形坐标
-  let array_overlaptri = draw_Triobjs(points, width); // 重叠三角形坐标
+
+  let obj = draw_Triobjs(points, width); // 重叠三角形坐标
+  let array_overlaptri = obj.arr;
+
+  let newPts = toXYArray(transform1(obj.newPts)); //已经删除处理后的坐标
+
   let array_debug = draw_debug_Trinet(points, width); //debug三角网坐标
+
+  let arr_newtringleStrip = draw_line_Tris(obj.newPts, width); //删除重叠部分三角形的坐标条带
+
   /*
     let line = toXYArray(points);
-    let array_line = draw_line_Tris(points, width); //原始剖分三角形坐标
-    let array_overlaptri = draw_Triobjs(points, width); // 重叠三角形坐标
-    let array_debug = draw_debug_Trinet(points, width); //debug三角网坐标
 */
   // 绘制
-  draw_three_objs(line, array_line, array_overlaptri, array_debug);
+  draw_three_objs(
+    line,
+    array_line,
+    array_overlaptri,
+    array_debug,
+    arr_newtringleStrip,
+    newPts
+  );
 }
 
 //绘制三角形串表示的线
-function draw_line_Tris(points, width) {
+function draw_line_Tris(points, width, isConverted) {
   let pos = insertPts(points, width);
-  // let array = toXYArray(ptsToTriangles(pos.pts1, pos.pts2)); //得到所有组成线段的三角形坐标
-  let array = convertCor(toXYArray(ptsToTriangles(pos.pts1, pos.pts2))); //得到所有组成线段的三角形坐标
+  // var array;
+  // if (!isConverted) {
+  //   array = toXYArray(ptsToTriangles(pos.pts1, pos.pts2)); //得到所有组成线段的三角形坐标
+  // } else {
+  var array = convertCor(toXYArray(ptsToTriangles(pos.pts1, pos.pts2))); //得到所有组成线段的三角形坐标
+  // }
   let arr = [];
   arr.push(array);
   return arr;
@@ -69,43 +88,41 @@ function draw_debug_Trinet(points, width) {
 function draw_Triobjs(points, width) {
   let pos = insertPts(points, width);
   let array = get_Tris(pos.pts1, pos.pts2); //得到所有组成线段的三角形坐标
-  let overlapTris = get_Overlap_Tris(array); //找出所有产生重叠的三角形
-  console.log(overlapTris);
-  array = Tris_to_XYarr(overlapTris); //将三角形坐标转换成xy数组
+  let overlapTris = get_Overlap_Tris(array, points); //找出所有产生重叠的三角形
+  // console.log(overlapTris.overlap_Tris);
+  let newPts = overlapTris.newPts;
+  array = Tris_to_XYarr(overlapTris.overlap_Tris); //将三角形坐标转换成xy数组
 
   // 绘制变颜色的重叠三角形
   // let color = [1.0, 0.0, 0.0, 1.0]; //重叠三角形变成红色，直接在绘制函数中改变颜色
   let arr = [];
   arr.push(array);
-
-  return arr;
-  // drawRiver(arr, color);
+  return { arr, newPts };
 }
 
 // 遍历每个三角形，比较得到重叠的三角形
 // para:   triangles={{p1,p2,p3}，{}，{}，……},为Triangle对象数组
-function get_Overlap_Tris(triangles) {
+function get_Overlap_Tris(triangles, points) {
   let len = triangles.length;
-
   // 保存找到的有位置重叠的三角形
   let overlap_Tris = [];
   var flag = false;
-
-  // let arr = triangles; //将数组赋值给另外一个数组，可能会改变数组的值
-
+  var newPts = addID(points); //添加id
   for (var i = 0; i < len; i++) {
     //triangles[j]不与前面的三角形发生重叠
     for (var j = i + 1; j < len && !triangles[j].tag; j++) {
       // 判断两个三角形的位置关系
       flag = Trianglesoverlap(triangles[i], triangles[j]);
-
       // flag=true,有位置重叠
       if (flag) {
+        console.log('有冲突');
         triangles[i].tag = true;
         triangles[j].tag = true;
+
         // 保存两个重叠的三角形
         overlap_Tris.push(triangles[i]);
         overlap_Tris.push(triangles[j]);
+        newPts = deletePts(newPts, triangles[i].id, triangles[j].id); //每次都从原数组进行删除，不对……
       }
     }
   }
@@ -113,7 +130,33 @@ function get_Overlap_Tris(triangles) {
     console.log('折线没有重叠部分');
     overlap_Tris.length = 0; //清空数组
   }
-  return overlap_Tris;
+  return { overlap_Tris, newPts };
+}
+
+//points数组删除指定索引范围的坐标，获取新的线坐标
+function deletePts(points, start, end) {
+  let pts = [];
+  let gap = end - start;
+  for (var i = 0; i < points.length; i++) {
+    if (points[i].id == start) {
+      pts.push(points[i]);
+      //确保删除的线段之间没有被删除过，如果points中id不连续时，会截断后面所有的顶点
+      if (points[i + 1].id == start + 1) {
+        i = i + gap;
+      }
+    } else {
+      pts.push(points[i]);
+    }
+  }
+  // console.log(pts.length);
+  return pts;
+}
+
+//删除一系列顶点，重新计算删除部分的三角形图元
+function get_repalceTris(points, start, end) {
+  let arr = [points[i], points[j]];
+  let pos = insertPts(arr);
+  let triangles = get_Tris(pos.pts1, pos.pts2); //用于替代原来中间的几个三角形图元
 }
 
 //三角形对象数组转换为xy坐标，方便绘制
@@ -134,8 +177,7 @@ function Tris_to_XYarr(triangles) {
 
   //转换坐标
   xyArr = convertCor(xyArr);
-  console.log(xyArr);
-
+  // console.log(xyArr);
   return xyArr;
 }
 

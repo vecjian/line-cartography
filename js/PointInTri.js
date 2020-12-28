@@ -1,8 +1,9 @@
 // Point 类
 class Point {
-  constructor(x, y) {
+  constructor(x, y, id) {
     this.x = x || 0;
     this.y = y || 0;
+    this.id = id;
   }
 
   static normalize(m) {
