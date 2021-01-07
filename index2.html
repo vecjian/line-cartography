@@ -2,125 +2,130 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
-        canvas {
-            border: 1px solid black;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
 </head>
 
 <body>
-    <canvas id="canvas" width="400" height="400" style="height: auto; width: auto"></canvas>
-    <!-- <canvas id="paint" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <!-- <canvas id="canvas" width="400" height="400" style="height: auto; width: auto"></canvas> -->
+  <!-- <canvas id="paint" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas> -->
-    <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
 
-    <!-- <script src="./js/."></script> -->
-    <script src="./lib/earcut.dev.js"></script>
+  <!-- <script src="./js/."></script> -->
+  <script src="./lib/earcut.dev.js"></script>
 
-    <script src="./data/network_1.js"></script>
-    <script src="./data/border_simplify.js"></script>
-    <script src="./data/border_simplify1.js"></script>
-    <script src="./data/border.js"></script>
-    <script src="./data/generalization.js"></script>
+  <script src="./data/network_1.js"></script>
+  <script src="./data/border_simplify.js"></script>
+  <script src="./data/border_simplify1.js"></script>
+  <script src="./data/border.js"></script>
+  <script src="./data/generalization.js"></script>
 
-    <script src="./js/draw.js"></script>
-    <script src="./js/PointInTri.js"></script>
-    <script src="./js/symbol.js"></script>
-    <script src="./js/boundaryLine.js"></script>
-    <script src="./js/BinaryTree.js"></script>
-    <script src="./js/smoothLine.js"></script>
-    <script src="./js/drawLine.js"></script>
-    <script src="./js/index.js"></script>
-    <script src="./js/GL_Util1.js"></script>
+  <script src="./js/draw.js"></script>
+  <script src="./js/PointInTri.js"></script>
+  <script src="./js/symbol.js"></script>
+  <script src="./js/boundaryLine.js"></script>
+  <script src="./js/BinaryTree.js"></script>
+  <script src="./js/smoothLine.js"></script>
+  <script src="./js/drawLine.js"></script>
+  <script src="./js/index.js"></script>
+  <script src="./js/GL_Util1.js"></script>
 
-    <script>
-        // var pts = initLine(5);
-        //初始化非封闭线段
-        function initcentralLine(m, n) {
-            const a = 0.05;
-            var vectors = [];
-            for (var i = 0; i < 20; i++) {
-                let point = new Point(m, n);
-                vectors.push(point);
-                m = m + a;
-                n = n + a;
-            }
-            return vectors;
-        }
+  <script>
+    // var pts = initLine(5);
+    //初始化非封闭线段
+    function initcentralLine(m, n) {
+      const a = 0.05;
+      var vectors = [];
+      for (var i = 0; i < 20; i++) {
+        let point = new Point(m, n);
+        vectors.push(point);
+        m = m + a;
+        n = n + a;
+      }
+      return vectors;
+    }
 
-        // 双线
-        function doubleLine() {
-            // 初始化中心线坐标
-            let initline = initcentralLine(-0.2, -0.2);
-            // let initline = initclosedLine(-0.2, -0.2);
-            let triangleStrip = generateDoubleLine(initline, 0.05);
-            var gl = getContextgl2();
-            lines(gl, triangleStrip, false, false);
-        }
+    // 双线
+    function doubleLine() {
+      // 初始化中心线坐标
+      let initline = initcentralLine(-0.2, -0.2);
+      // let initline = initclosedLine(-0.2, -0.2);
+      let triangleStrip = generateDoubleLine(initline, 0.05);
+      var gl = getContextgl2();
+      lines(gl, triangleStrip, false, false);
+    }
 
-        // 三线
-        function threeLine() {
-            // 初始化中心线坐标
-            let initline = initcentralLine(-0.2, -0.2);
-            let triangleStrip = generateDoubleLine(initline, 0.05);
-            var gl = getContextgl1();
-            lines(gl, triangleStrip, true, false);
-        }
+    // 三线
+    function threeLine() {
+      // 初始化中心线坐标
+      let initline = initcentralLine(-0.2, -0.2);
+      let triangleStrip = generateDoubleLine(initline, 0.05);
+      var gl = getContextgl1();
+      lines(gl, triangleStrip, true, false);
+    }
 
-        //境界线
-        function borderStrip() {
-            //初始化界线
-            var points = getBorder(border);
-            getArea(points);
-            let triangleStrip = generateBorderStrip(points, 0.15);
-            // drawBorderArea(triangleStrip, false, true); //带区域面
-            drawBorder(triangleStrip, false, true); //不带区域面
-        }
+    //境界线
+    function borderStrip() {
+      //初始化界线
+      var points = getBorder(border);
+      getArea(points);
+      let triangleStrip = generateBorderStrip(points, 0.15);
+      // drawBorderArea(triangleStrip, false, true); //带区域面
+      drawBorder(triangleStrip, false, true); //不带区域面
+    }
 
-        //二叉树渐变河流网
-        // let stroke_array = getMapStructure(originData, false);
-        let stroke_array1 = getMapStructure(originData, false);
+    //二叉树渐变河流网
+    let stroke_array = getMapStructure(originData, false);
+    // let stroke_array1 = getMapStructure(originData, false);
+    let OBJ;
+    function display_forest() {
+      clearBoundary();
+      let forest = new Forest();
+      forest.newForest(stroke_array);
+      forest.DrawForest();
+      // drawRiver(wholeArr)
 
-        function display_forest() {
-            clearBoundary();
-            let forest = new Forest();
-            forest.newForest(stroke_array);
-            forest.DrawForest();
-            // drawRiver(wholeArr)
-            clearBoundary();
-        }
+      OBJ = wholeArr;
+      draw_debug_riverNet(OBJ)
+      clearBoundary()
+      riverNet()
 
-        //河流网的冲突检测
-        function riverNet() {
-            get_Whole_arr(stroke_array1, 0.0011);
-            clearBoundary();
-        }
+    }
 
-        //单线看效果
-        function oneLine() {
-            clearBoundary();
-            let stroke_array2 = getMapStructure(generalizationLine, false);
-            draw_detect(stroke_array2[0].points, 0.0015);
-            clearBoundary();
-        }
+    //河流网的冲突检测
+    function riverNet() {
+      get_Whole_arr(stroke_array, 0.0011);
+      clearBoundary();
+    }
+
+    //单线看效果
+    function oneLine() {
+      clearBoundary();
+      let stroke_array2 = getMapStructure(generalizationLine, false);
+      draw_detect(stroke_array2[0].points, 0.0015);
+      clearBoundary();
+    }
 
 
-        //河流网
-        // display_forest();
-        // borderStrip();
-        // doubleLine();
-        // threeLine();
-        // oneLine();
-        riverNet();
+    //河流网
+    display_forest();
+    // borderStrip();
+    // doubleLine();
+    // threeLine();
+    // oneLine();
+    // riverNet();
 
-        //着色器计算连续插值
-        // init();
-    </script>
+    //着色器计算连续插值
+    // init();
+  </script>
 </body>
 
 </html>
