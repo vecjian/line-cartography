@@ -13,8 +13,8 @@
 </head>
 
 <body>
-  <!-- <canvas id="canvas" width="400" height="400" style="height: auto; width: auto"></canvas> -->
-  <!-- <canvas id="paint" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <!-- <canvas id="canvas" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas> -->
   <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
@@ -22,7 +22,7 @@
   <!-- <script src="./js/."></script> -->
   <script src="./lib/earcut.dev.js"></script>
 
-  <script src="./data/network_1.js"></script>
+  <script src="./data/originData.js"></script>
   <script src="./data/border_simplify.js"></script>
   <script src="./data/border_simplify1.js"></script>
   <script src="./data/border.js"></script>
@@ -86,21 +86,23 @@
     let stroke_array = getMapStructure(originData, false);
     // let stroke_array1 = getMapStructure(originData, false);
     let OBJ;
+
     function display_forest() {
       clearBoundary();
       let forest = new Forest();
       forest.newForest(stroke_array);
       forest.DrawForest();
+      clearBoundary()
+
       // drawRiver(wholeArr)
 
-      OBJ = wholeArr;
-      draw_debug_riverNet(OBJ)
-      clearBoundary()
-      riverNet()
+      // OBJ = wholeArr;
+      // draw_debug_riverNet(OBJ)
+      // riverNet()
 
     }
 
-    //河流网的冲突检测
+    //河流网的冲突检测，树
     function riverNet() {
       get_Whole_arr(stroke_array, 0.0011);
       clearBoundary();
@@ -116,12 +118,12 @@
 
 
     //河流网
-    display_forest();
+    // display_forest();//
     // borderStrip();
     // doubleLine();
     // threeLine();
     // oneLine();
-    // riverNet();
+    riverNet();
 
     //着色器计算连续插值
     // init();

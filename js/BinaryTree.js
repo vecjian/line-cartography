@@ -163,7 +163,30 @@ class BinaryTree {
     return this.nodeNum
   }
 
+  //遍历使无分支河段收尾相接
+  // connectBranch(node) {
+  //   if (node == null) {
+  //     return //递归基
+  //   }
+
+  //   //存在两个孩子
+  //   if (node.left && node.right) {
+  //     this.connectBranch(node.left)
+  //     this.connectBranch(node.right)
+  //   } else if (node.left) {
+  //     node.points = addArrs(node.points, node.left.points)
+  //   } else if (node.right) {
+  //     node.points = addArrs(node.points, node.right.points)
+  //   }
+
+  //   let newNode = new Node()
+  //   newNode = node.parent
+  //   node.endWid = newNode.startWid
+  //   this.draw(node.points, node.endWid, node) //根节点之外的节点插值计算
+  // }
+
   //绘制树
+
   DrawTree() {
     this.DrawNode(this.root)
     // let color = [0.0, 0.0, 1.0, 1.0];
@@ -205,12 +228,12 @@ class BinaryTree {
     }
     //只绘制根节点
 
-    // if (node.left != null) {
-    //   this.DrawNode(node.left)
-    // }
-    // if (node.right != null) {
-    //   this.DrawNode(node.right)
-    // }
+    if (node.left != null) {
+      this.DrawNode(node.left)
+    }
+    if (node.right != null) {
+      this.DrawNode(node.right)
+    }
   }
 
   draw(points, width, node) {
@@ -225,7 +248,7 @@ class BinaryTree {
     wholeArr.debugTriNet.push(obj.debugTriNet)
     wholeArr.newTriStrip.push(obj.newTriStrip)
 
-    // draw_debug_riverNet(wholeArr)
+    draw_debug_riverNet(wholeArr)
   }
 }
 
@@ -598,4 +621,19 @@ function get_Whole_Binaryarr(points, width) {
   }
 
   return object
+}
+
+//数组拼接
+function addArrs(arr1, arr2) {
+  var arr,
+    Arr = arr2.reverse() //数组翻转
+  if (
+    Math.abs(arr1[0].x - arr2[0].x) < 1e-7 &&
+    Math.abs(arr1[0].y - arr2[0].y) < 1e-7
+  ) {
+    arr = arr1.concat(arr2)
+  } else {
+    arr = arr1.concat(Arr)
+  }
+  return arr
 }

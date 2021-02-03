@@ -238,49 +238,6 @@ function lines(gl, trianglestrip, debug, central) {
   }
 }
 
-// 境界线
-function drawBorder(trianglestrip, debug, central) {
-  let gl = getContextgl3()
-  gl.clearColor(0.95, 0.95, 0.95, 1)
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-  var program = createProgram(gl, v_Shader, f_Shader)
-  gl.useProgram(program.program)
-
-  //绘制双线
-  let insideStrip = trianglestrip.insideStrip
-  let outsideStrip = trianglestrip.outsideStrip
-
-  gl.uniform4fv(program.u_color, [0.7, 0.7, 0.7, 1.0])
-  riverBuffer = createBuffer(gl, new Float32Array(outsideStrip))
-  bindAttribute(gl, riverBuffer, program.a_Position, 2)
-  n = outsideStrip.length / 2
-  gl.drawArrays(gl.TRIANGLES, 0, n)
-  if (debug) {
-    gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0])
-    gl.drawArrays(gl.LINE_STRIP, 0, n)
-  }
-
-  gl.uniform4fv(program.u_color, [0.5, 0.5, 0.5, 1.0])
-  var riverBuffer = createBuffer(gl, new Float32Array(insideStrip))
-  bindAttribute(gl, riverBuffer, program.a_Position, 2)
-  n = insideStrip.length / 2
-  gl.drawArrays(gl.TRIANGLES, 0, n)
-  if (debug) {
-    gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0])
-    gl.drawArrays(gl.LINE_STRIP, 0, n)
-  }
-
-  if (central) {
-    // 绘制中心线
-    gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 1.0])
-    riverBuffer = createBuffer(gl, new Float32Array(trianglestrip.centralLine))
-    bindAttribute(gl, riverBuffer, program.a_Position, 2)
-    n = trianglestrip.centralLine.length / 2
-    gl.drawArrays(gl.LINE_STRIP, 0, n)
-    // gl.drawArrays(gl.TRIANGLE_FAN, 0, n);
-  }
-}
-
 //同时绘制河网结构
 //绘制原始剖分线、debug三角网、重叠三角形
 function draw_debug_riverNet(obj) {
@@ -314,45 +271,45 @@ function draw_debug_riverNet(obj) {
     n = centralLine[i].length / 2
     gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制中心线
   }
-  /*
-    // 绘制变色重叠三角形
-    gl.uniform4fv(program.u_color, [1.0, 0.0, 0.0, 1.0])
-    for (let i = 0; i < overlapTris.length; i++) {
-        if (overlapTris[i].length) {
-            var riverBuffer = createBuffer(gl, new Float32Array(overlapTris[i]))
-            bindAttribute(gl, riverBuffer, program.a_Position, 2)
-            n = overlapTris[i].length / 2
-            gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
-        }
-    }
 
-    //绘制三角网
-    gl.uniform4fv(program.u_color, [0.8, 0.0, 0.0, 0.8])
-    for (let i = 0; i < debugTriNet.length; i++) {
-        var riverBuffer = createBuffer(gl, new Float32Array(debugTriNet[i]))
-        bindAttribute(gl, riverBuffer, program.a_Position, 2)
-        gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
+  // 绘制变色重叠三角形
+  gl.uniform4fv(program.u_color, [1.0, 0.0, 0.0, 1.0])
+  for (let i = 0; i < overlapTris.length; i++) {
+    if (overlapTris[i].length) {
+      var riverBuffer = createBuffer(gl, new Float32Array(overlapTris[i]))
+      bindAttribute(gl, riverBuffer, program.a_Position, 2)
+      n = overlapTris[i].length / 2
+      gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
     }
+  }
 
-    //绘制新的三角剖分条带
-    if (newTriStrip) {
-        gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 1.0])
-        for (let i = 0; i < newTriStrip.length; i++) {
-            riverBuffer = createBuffer(gl, new Float32Array(newTriStrip[i]))
-            bindAttribute(gl, riverBuffer, program.a_Position, 2)
-            n = newTriStrip[i].length / 2
-            gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
-        }
+  //绘制三角网
+  gl.uniform4fv(program.u_color, [0.8, 0.0, 0.0, 0.8])
+  for (let i = 0; i < debugTriNet.length; i++) {
+    var riverBuffer = createBuffer(gl, new Float32Array(debugTriNet[i]))
+    bindAttribute(gl, riverBuffer, program.a_Position, 2)
+    gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
+  }
+
+  //绘制新的三角剖分条带
+  if (newTriStrip) {
+    gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 1.0])
+    for (let i = 0; i < newTriStrip.length; i++) {
+      riverBuffer = createBuffer(gl, new Float32Array(newTriStrip[i]))
+      bindAttribute(gl, riverBuffer, program.a_Position, 2)
+      n = newTriStrip[i].length / 2
+      gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
     }
+  }
 
-    //绘制截取后的折线
-    if (newCentralLine) {
-        gl.uniform4fv(program.u_color, [0.0, 0.6, 0.0, 0.8])
-        for (let i = 0; i < newCentralLine.length; i++) {
-            var riverBuffer = createBuffer(gl, new Float32Array(newCentralLine[i]))
-            bindAttribute(gl, riverBuffer, program.a_Position, 2)
-            n = newCentralLine[i].length / 2
-            gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制新的折线段
-        }
-    }*/
+  //绘制截取后的折线
+  if (newCentralLine) {
+    gl.uniform4fv(program.u_color, [0.0, 0.6, 0.0, 0.8])
+    for (let i = 0; i < newCentralLine.length; i++) {
+      var riverBuffer = createBuffer(gl, new Float32Array(newCentralLine[i]))
+      bindAttribute(gl, riverBuffer, program.a_Position, 2)
+      n = newCentralLine[i].length / 2
+      gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制新的折线段
+    }
+  }
 }
