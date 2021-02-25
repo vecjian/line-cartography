@@ -37,6 +37,7 @@ var rect = {
   maxY: -1e3,
   minY: 1e3,
 }
+
 //处理数据，获取数据边框
 function getArea(vectorCors) {
   for (var i = 0; i < vectorCors.length; i++) {

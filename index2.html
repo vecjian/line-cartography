@@ -13,11 +13,12 @@
 </head>
 
 <body>
-  <!-- <canvas id="canvas" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <!-- <canvas id="paint0" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas> -->
-  <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <!-- <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas> -->
+  <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas>
 
   <!-- <script src="./js/."></script> -->
   <script src="./lib/earcut.dev.js"></script>
@@ -25,8 +26,10 @@
   <script src="./data/originData.js"></script>
   <script src="./data/border_simplify.js"></script>
   <script src="./data/border_simplify1.js"></script>
-  <script src="./data/border.js"></script>
+  <script src="./data/border0.js"></script>
   <script src="./data/generalization.js"></script>
+  <script src="./data/road.js"></script>
+  <script src="./data/twoRoad.js"></script>
 
   <script src="./js/draw.js"></script>
   <script src="./js/PointInTri.js"></script>
@@ -37,6 +40,8 @@
   <script src="./js/drawLine.js"></script>
   <script src="./js/index.js"></script>
   <script src="./js/GL_Util1.js"></script>
+  <script src="./js/contour.js"></script>
+  <script src="./js/brigde.js"></script>
 
   <script>
     // var pts = initLine(5);
@@ -104,17 +109,19 @@
 
     //河流网的冲突检测，树
     function riverNet() {
-      get_Whole_arr(stroke_array, 0.0011);
+      get_Whole_arr(stroke_array, 0.0020);
       clearBoundary();
     }
 
     //单线看效果
     function oneLine() {
       clearBoundary();
-      let stroke_array2 = getMapStructure(generalizationLine, false);
+      // let stroke_array2 = getMapStructure(generalizationLine, false);
+      let stroke_array2 = getMapStructure(road, false);
       draw_detect(stroke_array2[0].points, 0.0015);
       clearBoundary();
     }
+
 
 
     //河流网
@@ -122,8 +129,8 @@
     // borderStrip();
     // doubleLine();
     // threeLine();
-    // oneLine();
-    riverNet();
+    oneLine();
+    // riverNet();
 
     //着色器计算连续插值
     // init();
