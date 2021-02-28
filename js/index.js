@@ -10,27 +10,46 @@ const F_shader = `
     uniform float u_A;
     uniform float u_B;
     uniform float u_C;
+    // 计算遍历的像素点到线的距离
     float getDis(float x, float y) {
         return abs(x * u_A + y * u_B + u_C) / sqrt(u_A * u_A + u_B * u_B);
     }
     void main(){
-        float dis = getDis(gl_PointCoord[0], gl_PointCoord[1]);
+        float x = 2.0 * (gl_FragCoord[0] / 800.0) - 1.0;
+        float y = (gl_FragCoord[1] / 600.0 - 0.5) / 0.5;
+        float dis = getDis(x, y);
         float percent = 0.0;
         if(dis > u_halfHeight){
-            percent = (2.0 * u_halfHeight - dis) / u_halfHeight;
+            // percent = (2.0 * u_halfHeight - dis) / u_halfHeight;
+            percent = 0.7;
         }else {
-            percent = dis / u_halfHeight;
+            // percent = dis / u_halfHeight;
+            percent = 1.0;
         }
-        gl_FragColor = vec4(1.0, 0.0, 0.0, percent);
+        gl_FragColor = vec4(0.5, 0.5, 0.5, percent);
+        // gl_FragColor = vec4(1.0, 0.0, 0.0,1.0);
     }
 `
 
-const Bounds = [-0.2, -0.1, -0.1, 0.2, 1, 0, 1, 0.5]
-// const Bounds = [-0.3, -0.2, -0.2, 0.2, 0.3, -0.2, 0.2, 0.2]
+// const Bounds = [-0.5, 0.0, -0.5, 0.4, -0.2, 0.2, -0.2, -0.1, 1, 0.4, 1, 0.7];
+const Bounds = [-0.3, -0.2, -0.3, 0.2, 0.3, -0.2, 0.3, 0.2]
+const Bounds1 = [
+  -0.3,
+  -0.2,
+  -0.3,
+  0.2,
+  0.3,
+  -0.2,
+  0.3,
+  0.2,
+  0.48,
+  -0.4,
+  0.48,
+  0.0,
+]
 
 function getHalfHeight(bounds) {
-  // let [x1, y1, x2, y2, x3, y3, x4, y4] = bounds;
-  let [x1, y1, x2, y2, x3, y3] = bounds
+  let [x1, y1, x2, y2, x3, y3, x4, y4] = bounds
   let A = (y3 - y1) / (x1 - x3)
   let B = 1
   let C = -y1 - (x1 * (y3 - y1)) / (x1 - x3)
@@ -39,15 +58,16 @@ function getHalfHeight(bounds) {
 }
 
 function init() {
-  let gl = getGL(window, { preserveDrawingBuffer: true })
+  let gl = getGL(window, { preserveDrawingBuffer: false, fixretina: false })
   let program = createProgram(gl, V_shader, F_shader)
   let { A, B, C, halfHeight } = getHalfHeight(Bounds)
-  console.log(A, B, C, halfHeight)
+  // console.log(A, B, C, halfHeight);
   gl.useProgram(program.program)
 
   let vBuffer = createBuffer(gl, new Float32Array(Bounds))
   bindAttribute(gl, vBuffer, program.a_pos, 2)
   gl.uniform1f(program.u_halfHeight, halfHeight)
+
   gl.uniform1f(program.u_A, A)
   gl.uniform1f(program.u_B, B)
   gl.uniform1f(program.u_C, C)
@@ -55,3 +75,27 @@ function init() {
 }
 
 // init();
+// multiLine()
+
+// 测试折线段可否用着色器实现
+function multiLine(Bounds2) {
+  let gl = getGL(window, { preserveDrawingBuffer: false, fixretina: false })
+  let program = createProgram(gl, V_shader, F_shader)
+
+  //每一个四边形单独计算并绘制
+  for (var i = 0; i < Bounds2.length - 7; i = i + 4) {
+    const bounds = Bounds2.slice(i, i + 8)
+    let { A, B, C, halfHeight } = getHalfHeight(bounds)
+    console.log(A, B, C, halfHeight)
+    gl.useProgram(program.program)
+
+    let vBuffer = createBuffer(gl, new Float32Array(bounds))
+    bindAttribute(gl, vBuffer, program.a_pos, 2)
+    gl.uniform1f(program.u_halfHeight, halfHeight)
+
+    gl.uniform1f(program.u_A, A)
+    gl.uniform1f(program.u_B, B)
+    gl.uniform1f(program.u_C, C)
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+  }
+}

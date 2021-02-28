@@ -27,6 +27,8 @@ function getBorder(data) {
     var pt = new Point(pts[j][0], pts[j][1])
     points.push(pt)
   }
+  // pt = new Point(pts[0][0], pts[0][1])
+  // points.push(pt)
   console.log(j)
   return points
 }
@@ -194,3 +196,51 @@ function drawBorder(trianglestrip, debug, central) {
     // gl.drawArrays(gl.TRIANGLE_FAN, 0, n);
   }
 }
+
+/**********************************************************
+ *********************************************************** */
+//采用着色器方法绘制界线
+function drawWithShader(border) {
+  //1 获取数据
+  //初始化界线
+  var points = getBorder(border)
+  //获取数据边框
+  getArea(points) //注意react的值
+
+  //2 计算，转换数据
+  let bounds = getMultiBounds(points, 0.15)
+  //3 传递数据到着色器绘制
+  multiLine(bounds)
+}
+
+//多个四边形
+function getMultiBounds(borderPoints, width) {
+  var borderStrips = {} //两层色带
+  var cors1 = insertPts(borderPoints, width * 2, false) //较窄的插值,包括左插值pts1,右插值pts2
+  // var cors2 = insertPts(borderPoints, 2 * width, false) //较宽的插值,包括左插值pts1,右插值pts2
+
+  var arr1 = cors1.pts2 //左插值
+  var arr2 = borderPoints //原始折线
+
+  var arr = []
+  for (var i = 0; i < arr2.length; i++) {
+    arr.push(arr2[i])
+    arr.push(arr1[i])
+  }
+  let bounds = convertCor1(toXYArray(arr))
+  return bounds
+
+  // borderStrips.insideStrip = convertCor1(
+  // toXYArray(ptsToTriangles(borderPoints, cors1.pts2))
+  // )
+  // //左方向
+  // borderStrips.outsideStrip = convertCor1(
+  //   toXYArray(ptsToTriangles(cors1.pts2, cors2.pts2))
+  // )
+  // borderStrips.centralLine = convertCor1(toXYArray(borderPoints))
+  // // 索引值
+  // borderStrips.indexArr = getTriangles(borderPoints)
+  // return borderStrips
+}
+
+drawWithShader(border)

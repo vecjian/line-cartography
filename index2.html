@@ -116,8 +116,8 @@
     //单线看效果
     function oneLine() {
       clearBoundary();
-      // let stroke_array2 = getMapStructure(generalizationLine, false);
-      let stroke_array2 = getMapStructure(road, false);
+      let stroke_array2 = getMapStructure(generalizationLine, false);
+      // let stroke_array2 = getMapStructure(road, false);
       draw_detect(stroke_array2[0].points, 0.0015);
       clearBoundary();
     }
