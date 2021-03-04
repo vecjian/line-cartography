@@ -189,8 +189,10 @@ class BinaryTree {
 
   DrawTree() {
     this.DrawNode(this.root)
-    var gl = getContextgl()
-    console.log(wholeArr)
+    // let color = [0.0, 0.0, 1.0, 1.0];
+    // drawRiver(wholeArr, color);
+
+    let gl = getContextgl()
     draw_debug_riverNet(gl, wholeArr)
   }
 
@@ -229,12 +231,12 @@ class BinaryTree {
     }
     //只绘制根节点
 
-    // if (node.left != null) {
-    //   this.DrawNode(node.left)
-    // }
-    // if (node.right != null) {
-    //   this.DrawNode(node.right)
-    // }
+    if (node.left != null) {
+      this.DrawNode(node.left)
+    }
+    if (node.right != null) {
+      this.DrawNode(node.right)
+    }
   }
 
   draw(points, width, node) {
@@ -242,8 +244,6 @@ class BinaryTree {
     let pos = insertPts(points, width, true)
 
     node.startWid = pos.startWidth //小于startWid
-
-    console.log(node.startWid)
     wholeArr.centralLine.push(obj.centralLine)
     wholeArr.originStrip.push(obj.originStrip)
     wholeArr.overlapTris.push(obj.overlapTris)
@@ -251,12 +251,12 @@ class BinaryTree {
     wholeArr.debugTriNet.push(obj.debugTriNet)
     wholeArr.newTriStrip.push(obj.newTriStrip)
 
-    // 不能在这里绘制
-    // draw_debug_riverNet(gl, wholeArr)
+    //不能在这里绘制
+    // draw_debug_riverNet(wholeArr)
   }
 }
 
-var wholeArr = {
+let wholeArr = {
   centralLine: [],
   originStrip: [],
   overlapTris: [],

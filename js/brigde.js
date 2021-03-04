@@ -149,7 +149,7 @@ function get_min_max(arr) {
 /*
 //同时绘制河网结构
 //绘制原始剖分线、debug三角网、重叠三角形
-function draw_debug_riverNet(obj) {
+function draw_debug_riverNet(gl, obj) {
   let centralLine = obj.centralLine
   let originStrip = obj.originStrip
   let overlapTris = obj.overlapTris
@@ -191,12 +191,11 @@ function draw_debug_riverNet(obj) {
   }
 
   // //绘制三角网
-  // gl.uniform4fv(program.u_color, [0.8, 0.0, 0.0, 0.8])
-  // for (let i = 0; i < debugTriNet.length; i++) {
-  //   var riverBuffer = createBuffer(gl, new Float32Array(debugTriNet[i]))
-  //   bindAttribute(gl, riverBuffer, program.a_Position, 2)
-  //   gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
-  // }
+  gl.uniform4fv(program.u_color, [0.8, 0.0, 0.0, 0.8])
+  for (let i = 0; i < debugTriNet.length; i++) {
+    var riverBuffer = createBuffer(gl, new Float32Array(debugTriNet[i]))
+    bindAttribute(gl, riverBuffer, program.a_Position, 2)
+    gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
+  }
 }
-
 */

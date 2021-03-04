@@ -17,8 +17,8 @@
   <!-- <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas> -->
+  <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas> -->
+  <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas>
 
   <!-- <script src="./js/."></script> -->
   <script src="./lib/earcut.dev.js"></script>
@@ -91,26 +91,21 @@
     }
 
     //二叉树渐变河流网
-    let stroke_array = getMapStructure(originData, false);
+    let stroke_array = getMapStructure(originData, false);//同时生成boundary
     // let stroke_array1 = getMapStructure(originData, false);
     let OBJ;
 
     function display_forest() {
-      clearBoundary();
+      // clearBoundary();
       let forest = new Forest();
       forest.newForest(stroke_array);
       forest.DrawForest();
-      clearBoundary()
-
-      // drawRiver(wholeArr)
-      // OBJ = wholeArr;
-      // draw_debug_riverNet(OBJ)
-      // riverNet()
+      // clearBoundary()
     }
 
     //河流网的冲突检测，树
     function riverNet() {
-      var gl = getContextgl();
+      var gl = getContextgl5();
       get_Whole_arr(stroke_array, 0.0015, gl);
       clearBoundary();
     }
@@ -133,7 +128,7 @@
     // doubleLine();
     // threeLine();
     // oneLine();
-    // riverNet();
+    riverNet();
 
     //着色器计算连续插值
     // init();

@@ -269,7 +269,7 @@ function draw_debug_riverNet(gl, obj) {
     var riverBuffer = createBuffer(gl, new Float32Array(originStrip[i]))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     var n = originStrip[i].length / 2
-    // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+    gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
   }
 
   //绘制中心线
@@ -288,7 +288,7 @@ function draw_debug_riverNet(gl, obj) {
       var riverBuffer = createBuffer(gl, new Float32Array(overlapTris[i]))
       bindAttribute(gl, riverBuffer, program.a_Position, 2)
       n = overlapTris[i].length / 2
-      // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+      gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
     }
   }
 
@@ -297,7 +297,7 @@ function draw_debug_riverNet(gl, obj) {
   for (let i = 0; i < debugTriNet.length; i++) {
     var riverBuffer = createBuffer(gl, new Float32Array(debugTriNet[i]))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
-    // gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
+    gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
   }
   /*
   //绘制新的三角剖分条带
