@@ -189,8 +189,9 @@ class BinaryTree {
 
   DrawTree() {
     this.DrawNode(this.root)
-    // let color = [0.0, 0.0, 1.0, 1.0];
-    // drawRiver(wholeArr, color);
+    var gl = getContextgl()
+    console.log(wholeArr)
+    draw_debug_riverNet(gl, wholeArr)
   }
 
   //遍历绘制
@@ -228,12 +229,12 @@ class BinaryTree {
     }
     //只绘制根节点
 
-    if (node.left != null) {
-      this.DrawNode(node.left)
-    }
-    if (node.right != null) {
-      this.DrawNode(node.right)
-    }
+    // if (node.left != null) {
+    //   this.DrawNode(node.left)
+    // }
+    // if (node.right != null) {
+    //   this.DrawNode(node.right)
+    // }
   }
 
   draw(points, width, node) {
@@ -241,6 +242,8 @@ class BinaryTree {
     let pos = insertPts(points, width, true)
 
     node.startWid = pos.startWidth //小于startWid
+
+    console.log(node.startWid)
     wholeArr.centralLine.push(obj.centralLine)
     wholeArr.originStrip.push(obj.originStrip)
     wholeArr.overlapTris.push(obj.overlapTris)
@@ -248,11 +251,12 @@ class BinaryTree {
     wholeArr.debugTriNet.push(obj.debugTriNet)
     wholeArr.newTriStrip.push(obj.newTriStrip)
 
-    draw_debug_riverNet(wholeArr)
+    // 不能在这里绘制
+    // draw_debug_riverNet(gl, wholeArr)
   }
 }
 
-let wholeArr = {
+var wholeArr = {
   centralLine: [],
   originStrip: [],
   overlapTris: [],
@@ -556,7 +560,7 @@ function toXYArray(points) {
 
 //将所有计算的结果存在同一个数组
 // 绘制，检测，重绘,para:points:strokes
-function get_Whole_arr(strokes, width) {
+function get_Whole_arr(strokes, width, gl) {
   //计算了很多遍插值
   let line = []
   let array_line = []
@@ -593,7 +597,7 @@ function get_Whole_arr(strokes, width) {
     newTriStrip: arr_newtringleStrip,
   }
 
-  draw_debug_riverNet(object)
+  draw_debug_riverNet(gl, object)
 }
 
 //Draw with BinaryTree

@@ -5,7 +5,7 @@
 // 4.面状的色带缓冲区
 
 // 绘制，检测，重绘,para:points:Point类
-function draw_detect(points, width) {
+function draw_detect(gl, points, width) {
   //计算了很多遍插值
   let centralLine = toXYArray(transform1(points)) //坐标转换
 
@@ -33,6 +33,7 @@ function draw_detect(points, width) {
   //   newTriStrip,
   // }
   draw_three_objs(
+    gl,
     centralLine,
     originStrip,
     overlapTris,

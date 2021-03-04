@@ -5,7 +5,7 @@
 //2生成最外层桥梁条带
 //3贴图
 
-get_twoLineConflict(twoRoad, 0.0015)
+// get_twoLineConflict(twoRoad, 0.0015)
 //数据获取和准备
 function getData(data) {
   let features0 = data.features[0]
@@ -62,12 +62,12 @@ function dealData(road1, road2, width) {
 
   //原始剖分三角形
   let pos = insertPts(road1, width)
-  var originStrip1 = convertCor1(
+  var originStrip1 = convertCor2(
     toXYArray(ptsToTriangles(pos.pts1, pos.pts2)),
     bound
   )
   pos = insertPts(road2, width)
-  var originStrip2 = convertCor1(
+  var originStrip2 = convertCor2(
     toXYArray(ptsToTriangles(pos.pts1, pos.pts2)),
     bound
   )
@@ -92,7 +92,7 @@ function dealData(road1, road2, width) {
   return { centralLine, originStrip, overlapTris }
 }
 
-function convertCor1(xyArr, bound) {
+function convertCor2(xyArr, bound) {
   let arr = []
   for (var i = 0; i < xyArr.length; i = i + 2) {
     let x =
@@ -146,6 +146,7 @@ function get_min_max(arr) {
   return { minindex: min, maxindex: max }
 }
 
+/*
 //同时绘制河网结构
 //绘制原始剖分线、debug三角网、重叠三角形
 function draw_debug_riverNet(obj) {
@@ -154,7 +155,7 @@ function draw_debug_riverNet(obj) {
   let overlapTris = obj.overlapTris
   let debugTriNet = obj.debugTriNet
 
-  var gl = getContextgl5()
+  // var gl = getContextgl5()
   gl.clearColor(0.95, 0.95, 0.95, 1)
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
   var program = createProgram(gl, v_Shader, f_Shader)
@@ -197,3 +198,5 @@ function draw_debug_riverNet(obj) {
   //   gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
   // }
 }
+
+*/

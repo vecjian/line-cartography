@@ -40,6 +40,16 @@ var rect = {
   minY: 1e3,
 }
 
+//清空rect的值
+function clearRect() {
+  rect = {
+    maxX: -1e3,
+    minX: 1e3,
+    maxY: -1e3,
+    minY: 1e3,
+  }
+}
+
 //处理数据，获取数据边框
 function getArea(vectorCors) {
   for (var i = 0; i < vectorCors.length; i++) {
@@ -155,8 +165,8 @@ function drawBorderArea(trianglestrip, debug, central) {
 }
 
 // 境界线
-function drawBorder(trianglestrip, debug, central) {
-  let gl = getContextgl3()
+function drawBorder(gl, trianglestrip, debug, central) {
+  // let gl = getContextgl3()
   gl.clearColor(0.95, 0.95, 0.95, 1)
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
   var program = createProgram(gl, v_Shader, f_Shader)
@@ -229,18 +239,6 @@ function getMultiBounds(borderPoints, width) {
   }
   let bounds = convertCor1(toXYArray(arr))
   return bounds
-
-  // borderStrips.insideStrip = convertCor1(
-  // toXYArray(ptsToTriangles(borderPoints, cors1.pts2))
-  // )
-  // //左方向
-  // borderStrips.outsideStrip = convertCor1(
-  //   toXYArray(ptsToTriangles(cors1.pts2, cors2.pts2))
-  // )
-  // borderStrips.centralLine = convertCor1(toXYArray(borderPoints))
-  // // 索引值
-  // borderStrips.indexArr = getTriangles(borderPoints)
-  // return borderStrips
 }
 
-drawWithShader(border)
+// drawWithShader(border)

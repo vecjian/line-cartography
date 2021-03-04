@@ -122,6 +122,7 @@ function drawTriNet(array) {
 //绘制原始剖分线、debug三角网、重叠三角形
 // para:  color=[r,g,b,a]
 function draw_three_objs(
+  gl,
   centralLine,
   originStrip,
   overlapTris,
@@ -129,7 +130,7 @@ function draw_three_objs(
   debugTriNet,
   newTriStrip
 ) {
-  var gl = getContextgl3()
+  // var gl = getContextgl3()
   gl.clearColor(0.95, 0.95, 0.95, 1)
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
   var program = createProgram(gl, v_Shader, f_Shader)
@@ -192,7 +193,7 @@ function draw_three_objs(
 }
 
 // 三线、双线
-function lines(gl, trianglestrip, debug, central) {
+function drawlines(gl, trianglestrip, debug, central) {
   // let gl = getContextgl1();
   gl.clearColor(0.95, 0.95, 0.95, 1)
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
@@ -248,7 +249,7 @@ function lines(gl, trianglestrip, debug, central) {
 
 //同时绘制河网结构
 //绘制原始剖分线、debug三角网、重叠三角形
-function draw_debug_riverNet(obj) {
+function draw_debug_riverNet(gl, obj) {
   let centralLine = obj.centralLine
   let originStrip = obj.originStrip
   let overlapTris = obj.overlapTris
@@ -256,7 +257,7 @@ function draw_debug_riverNet(obj) {
   let debugTriNet = obj.debugTriNet
   let newTriStrip = obj.newTriStrip
 
-  var gl = getContextgl4()
+  // var gl = getContextgl()
   gl.clearColor(0.95, 0.95, 0.95, 1)
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
   var program = createProgram(gl, v_Shader, f_Shader)
@@ -268,7 +269,7 @@ function draw_debug_riverNet(obj) {
     var riverBuffer = createBuffer(gl, new Float32Array(originStrip[i]))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     var n = originStrip[i].length / 2
-    gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+    // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
   }
 
   //绘制中心线
@@ -287,7 +288,7 @@ function draw_debug_riverNet(obj) {
       var riverBuffer = createBuffer(gl, new Float32Array(overlapTris[i]))
       bindAttribute(gl, riverBuffer, program.a_Position, 2)
       n = overlapTris[i].length / 2
-      gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+      // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
     }
   }
 
@@ -296,7 +297,7 @@ function draw_debug_riverNet(obj) {
   for (let i = 0; i < debugTriNet.length; i++) {
     var riverBuffer = createBuffer(gl, new Float32Array(debugTriNet[i]))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
-    gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
+    // gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
   }
   /*
   //绘制新的三角剖分条带

@@ -1,3 +1,5 @@
+//着色器设计库
+
 const V_shader = `
     attribute vec4 a_pos;
     void main(){
@@ -19,14 +21,21 @@ const F_shader = `
         float y = (gl_FragCoord[1] / 600.0 - 0.5) / 0.5;
         float dis = getDis(x, y);
         float percent = 0.0;
-        if(dis > u_halfHeight){
+        // if(dis > u_halfHeight){
+        if(dis > 0.0&&dis<0.1*u_halfHeight*2.0){
+          gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
             // percent = (2.0 * u_halfHeight - dis) / u_halfHeight;
-            percent = 0.7;
-        }else {
+            // percent = 0.7;
+        }else if(dis>0.1*u_halfHeight*2.0&&dis<0.9*u_halfHeight*2.0){
+          gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+
             // percent = dis / u_halfHeight;
-            percent = 1.0;
+            // percent = dis / u_halfHeight;
+            // percent = 1.0;
+        }else{
+          gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
         }
-        gl_FragColor = vec4(0.5, 0.5, 0.5, percent);
+        // gl_FragColor = vec4(0.5, 0.5, 0.5, percent);
         // gl_FragColor = vec4(1.0, 0.0, 0.0,1.0);
     }
 `
@@ -96,6 +105,7 @@ function multiLine(Bounds2) {
     gl.uniform1f(program.u_A, A)
     gl.uniform1f(program.u_B, B)
     gl.uniform1f(program.u_C, C)
+    // gl.drawArrays(gl.TRIANGLE_FAN, 0, 4)
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
   }
 }
