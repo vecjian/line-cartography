@@ -170,7 +170,7 @@ function draw_three_objs(
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
   }
-  /*
+
   //绘制新的三角剖分条带
   if (newTriStrip) {
     gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 1.0])
@@ -189,7 +189,7 @@ function draw_three_objs(
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     n = newCentralLine.length / 2
     gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制新的折线段
-  }*/
+  }
 }
 
 // 三线、双线

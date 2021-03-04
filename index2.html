@@ -14,10 +14,10 @@
 
 <body>
   <canvas id="paint0" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <!-- <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas> -->
+  <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas>
 
   <!-- <script src="./js/."></script> -->
@@ -124,11 +124,12 @@
 
     //河流网
     display_forest();//
-    // borderStrip();
-    // doubleLine();
-    // threeLine();
-    // oneLine();
     riverNet();
+
+    borderStrip();
+    doubleLine();
+    threeLine();
+    oneLine();
 
     //着色器计算连续插值
     // init();
