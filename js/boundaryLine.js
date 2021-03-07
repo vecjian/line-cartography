@@ -128,6 +128,8 @@ function drawBorderArea(trianglestrip, debug, central) {
   //绘制双线
   let insideStrip = trianglestrip.insideStrip
   let outsideStrip = trianglestrip.outsideStrip
+  //设置缩放参数
+  gl.uniform1f(program.u_Scale, 1.0)
 
   gl.uniform4fv(program.u_color, [0.7, 0.7, 0.7, 1.0])
   riverBuffer = createBuffer(gl, new Float32Array(outsideStrip))
@@ -175,6 +177,8 @@ function drawBorder(gl, trianglestrip, debug, central) {
   //绘制双线
   let insideStrip = trianglestrip.insideStrip
   let outsideStrip = trianglestrip.outsideStrip
+  //设置缩放参数
+  gl.uniform1f(program.u_Scale, 1.0)
 
   gl.uniform4fv(program.u_color, [0.7, 0.7, 0.7, 1.0])
   riverBuffer = createBuffer(gl, new Float32Array(outsideStrip))

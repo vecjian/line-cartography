@@ -2,12 +2,17 @@
 // 二叉树的节点为每一个河段
 // 河段指的是从河源到汇口之间或者汇口和汇口之间的河流段
 let widLevel = {
-  // level1: 0.0015,
-  level1: 0.0015,
-  level2: 0.015,
-  level3: 0.01,
-  level4: 0.008,
-  level5: 0.006,
+  level1: 0.00019,
+  level2: 0.0011,
+  level3: 0.001,
+  level4: 0.00095,
+  level5: 0.00088,
+
+  // level1: 0.002,
+  // level2: 0.0018,
+  // level3: 0.0016,
+  // level4: 0.0015,
+  // level5: 0.0014,
 }
 
 function getMapStructure(data, istransformed) {
@@ -74,7 +79,7 @@ function Node(stroke = null, v = false) {
 
   //标签
   this.virtual = v
-  //    关系
+  //关系
   this.parent = null
   this.left = null
   this.right = null
@@ -99,6 +104,7 @@ class BinaryTree {
         let node = new Node(stroke, false)
         node.depth = pNode.depth + 1
         children.push(node)
+        // this.nodeNum += 1
       }
     }
 
@@ -120,23 +126,25 @@ class BinaryTree {
       this.newTree(children[0])
       this.newTree(children[1])
     } //构造虚拟孩子
-    else {
-      let children = newVirtualNodes(pNode, children)
+    else if (children.length == 3) {
+      children = this.newVirtualNodes(pNode, children)
       for (let i = 0; i < children.length; i++) {
         this.newTree(children[i])
       }
     }
   }
 
+  //虚节点的函数还是有点问题？？？把具有三个节点的函数写死
   //当找到的孩子节点大于2时，创建虚拟节点
   newVirtualNodes(parent, children) {
     //判断需要的虚节点的数量
-    minVirNum = Math.floor(children.length / 2) * 2
+    let minVirNum = Math.floor(children.length / 2)
+    // let minVirNum = Math.floor(children.length / 2) * 2
 
     let nodes = []
     let stroke = null
     for (let i = 0; i < minVirNum; i++) {
-      let virNode = new Node(stroke, true)
+      let virNode = new Node(stroke, true) //定义一个虚节点
       nodes.push(virNode)
     }
     nodes.push.apply(nodes, children) //将children拼接到nodes
@@ -144,18 +152,30 @@ class BinaryTree {
     //配对关系
     for (let i = 0; i < nodes.length; i += 2) {
       nodes[i].parent = currParent //更新父亲
-      currParent.left = nodes[i] //更新左孩子
-      currParent.right = nodes[i + 1] //更新右孩子
+      currParent.left = nodes[i + 1] //更新左孩子
+      currParent.right = nodes[i] //更新右孩子
       nodes[i].depth = currParent.depth + 1 //更新深度
 
-      if (i >= nodes.length - 1) break //指针抵达最后一个元素，防止i+1超出索引
       nodes[i + 1].parent = currParent //更新父亲
-      currParent.right = nodes[i + 1] //更新孩子
-      nodes[i + 1].depth = currParent.depth + 1 //更新深度
-      currParent = nodes[i / 2 - 1] //更新当前父亲
+      currParent = nodes[i]
+
+      //指针抵达最后一个元素，防止i+1超出索引
+      if (i >= nodes.length - 1) {
+        break
+      }
+      // else {
+      //   nodes[i + 1].parent = currParent //更新父亲
+      //   currParent.right = nodes[i + 1] //更新孩子
+      //   // nodes[i + 1].depth = currParent.depth + 1 //更新深度
+      //   // currParent = nodes[i / 2 - 1] //更新当前父亲
+      //   // console.log(currParent)
+      // }
     }
+
     //返回孩子节点
-    return nodes.slice(minVirNum, nodes.length)
+    let temp = nodes.slice(0, 2)
+    // return nodes.slice(minVirNum, nodes.length)
+    return temp
   }
 
   //获取节点个数
@@ -189,8 +209,6 @@ class BinaryTree {
 
   DrawTree() {
     this.DrawNode(this.root)
-    // let color = [0.0, 0.0, 1.0, 1.0];
-    // drawRiver(wholeArr, color);
 
     let gl = getContextgl()
     draw_debug_riverNet(gl, wholeArr)
@@ -203,6 +221,7 @@ class BinaryTree {
     }
     //判断是虚节点
     if (!node.virtual) {
+      //如果是根节点
       if (node == this.root) {
         switch (node.level) {
           case 1:
@@ -223,14 +242,28 @@ class BinaryTree {
         }
         this.draw(node.points, node.endWid, node) //当为根节点时，设置开始节点
       } else {
+        //当不是虚节点也不是根节点时
         let newNode = new Node()
         newNode = node.parent
-        node.endWid = newNode.startWid
+        if (newNode.virtual) {
+          node.endWid = newNode.parent.startWid //虚节点没有线宽
+        } else {
+          node.endWid = newNode.startWid
+        }
         this.draw(node.points, node.endWid, node) //根节点之外的节点插值计算
       }
-    }
-    //只绘制根节点
+    } else {
+      //当节点为虚节点时，不可能是根节点
+      let newNode = new Node()
+      newNode = node.parent
+      node.left.endWid = newNode.startWid
+      node.right.endWid = newNode.startWid
 
+      // this.draw(node.left.points, node.left.endWid, node.left)
+      // this.draw(node.right.points, node.right.endWid, node.right)
+    }
+
+    //绘制左右节点
     if (node.left != null) {
       this.DrawNode(node.left)
     }
@@ -251,6 +284,7 @@ class BinaryTree {
     wholeArr.debugTriNet.push(obj.debugTriNet)
     wholeArr.newTriStrip.push(obj.newTriStrip)
 
+    //把每一个计算结果放在wholeArr进行保存，每一段都单独绘制，最后将回执结果呈现在屏幕上
     //不能在这里绘制
     // draw_debug_riverNet(wholeArr)
   }
@@ -288,6 +322,7 @@ class Forest {
         let rootNode = new Node(candRoot, false)
         let tree = new BinaryTree(rootNode)
         tree.newTree(rootNode) //得到这棵树
+        // tree.newTree(rootNode) //得到这棵树
         this.trees.push(tree)
       }
     }

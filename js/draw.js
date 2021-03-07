@@ -2,10 +2,16 @@
 //vertex shader
 var v_Shader = `
 attribute vec4 a_Position;
+
+// 设置缩放参数
+uniform float u_Scale;
 // varying vec2 v_pos;
 
 void main(){
-gl_Position = a_Position;
+gl_Position.x = a_Position.x * u_Scale;
+gl_Position.y = a_Position.y * u_Scale;
+gl_Position.z = a_Position.z * u_Scale;
+gl_Position.w = a_Position.w;
 // v_pos = a_Position;
 }`
 
@@ -136,6 +142,8 @@ function draw_three_objs(
   var program = createProgram(gl, v_Shader, f_Shader)
   gl.useProgram(program.program)
 
+  //设置缩放参数
+  gl.uniform1f(program.u_Scale, 1.0)
   //绘制原始剖分三角形
   gl.uniform4fv(program.u_color, [0.0, 0.2, 1.0, 0.7])
   // for (let i = 0; i < originStrip.length; i++) {
@@ -200,6 +208,8 @@ function drawlines(gl, trianglestrip, debug, central) {
   var program = createProgram(gl, v_Shader, f_Shader)
   gl.useProgram(program.program)
 
+  gl.uniform1f(program.u_Scale, 1.0)
+
   //绘制双线
   let leftStrip = trianglestrip.leftStrip
   let rightStrip = trianglestrip.rightStrip
@@ -210,9 +220,11 @@ function drawlines(gl, trianglestrip, debug, central) {
   bindAttribute(gl, riverBuffer, program.a_Position, 2)
   n = leftStrip.length / 2
   gl.drawArrays(gl.TRIANGLES, 0, n)
+
+  //三角网
   if (debug) {
     gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0])
-    gl.drawArrays(gl.LINE_STRIP, 0, n)
+    // gl.drawArrays(gl.LINE_STRIP, 0, n)
   }
 
   gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 1.0])
@@ -220,9 +232,10 @@ function drawlines(gl, trianglestrip, debug, central) {
   bindAttribute(gl, riverBuffer, program.a_Position, 2)
   n = rightStrip.length / 2
   gl.drawArrays(gl.TRIANGLES, 0, n)
+
   if (debug) {
     gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0])
-    gl.drawArrays(gl.LINE_STRIP, 0, n)
+    // gl.drawArrays(gl.LINE_STRIP, 0, n)
   }
 
   // 绘制中心线背景;
@@ -231,9 +244,10 @@ function drawlines(gl, trianglestrip, debug, central) {
   bindAttribute(gl, riverBuffer, program.a_Position, 2)
   n = centralStrip.length / 2
   gl.drawArrays(gl.TRIANGLES, 0, n)
+
   if (debug) {
     gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0])
-    gl.drawArrays(gl.LINE_STRIP, 0, n)
+    // gl.drawArrays(gl.LINE_STRIP, 0, n)
   }
 
   //绘制三线
@@ -263,6 +277,9 @@ function draw_debug_riverNet(gl, obj) {
   var program = createProgram(gl, v_Shader, f_Shader)
   gl.useProgram(program.program)
 
+  //设置缩放参数
+  gl.uniform1f(program.u_Scale, 1.0)
+
   //绘制原始剖分三角形
   gl.uniform4fv(program.u_color, [0.0, 0.2, 1.0, 0.7])
   for (let i = 0; i < originStrip.length; i++) {
@@ -278,7 +295,7 @@ function draw_debug_riverNet(gl, obj) {
     var riverBuffer = createBuffer(gl, new Float32Array(centralLine[i]))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     n = centralLine[i].length / 2
-    gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制中心线
+    // gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制中心线
   }
 
   // 绘制变色重叠三角形
@@ -293,13 +310,13 @@ function draw_debug_riverNet(gl, obj) {
   }
 
   //绘制三角网
-  gl.uniform4fv(program.u_color, [0.8, 0.0, 0.0, 0.8])
-  for (let i = 0; i < debugTriNet.length; i++) {
-    var riverBuffer = createBuffer(gl, new Float32Array(debugTriNet[i]))
-    bindAttribute(gl, riverBuffer, program.a_Position, 2)
-    gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
-  }
-  /*
+  // gl.uniform4fv(program.u_color, [0.8, 0.0, 0.0, 0.8])
+  // for (let i = 0; i < debugTriNet.length; i++) {
+  //   var riverBuffer = createBuffer(gl, new Float32Array(debugTriNet[i]))
+  //   bindAttribute(gl, riverBuffer, program.a_Position, 2)
+  //   gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
+  // }
+
   //绘制新的三角剖分条带
   if (newTriStrip) {
     gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 1.0])
@@ -307,7 +324,7 @@ function draw_debug_riverNet(gl, obj) {
       riverBuffer = createBuffer(gl, new Float32Array(newTriStrip[i]))
       bindAttribute(gl, riverBuffer, program.a_Position, 2)
       n = newTriStrip[i].length / 2
-      gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+      // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
     }
   }
 
@@ -318,7 +335,7 @@ function draw_debug_riverNet(gl, obj) {
       var riverBuffer = createBuffer(gl, new Float32Array(newCentralLine[i]))
       bindAttribute(gl, riverBuffer, program.a_Position, 2)
       n = newCentralLine[i].length / 2
-      gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制新的折线段
+      // gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制新的折线段
     }
-  }*/
+  }
 }

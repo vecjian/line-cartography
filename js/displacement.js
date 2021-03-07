@@ -118,4 +118,47 @@ function test() {
   drawDisplacement(points, newPts)
 }
 
-// test()
+test()
+
+//采用移位的方式去处理冲突
+function detect_displacement() {}
+
+//注意这是与前面重合的函数，需进行修改得到计算的坐标
+// 绘制，检测，重绘,para:points:Point类
+function draw_detect(gl, points, width) {
+  //计算了很多遍插值
+  let centralLine = toXYArray(transform1(points)) //坐标转换
+
+  let originStrip = draw_line_Tris(points, width) //原始剖分三角形坐标
+
+  let obj = draw_Triobjs(points, width) // 重叠三角形坐标
+  let overlapTris = obj.array
+
+  let newCentralLine = toXYArray(transform1(obj.newPts)) //已经删除处理后的坐标
+
+  let debugTriNet = draw_debug_Trinet(points, width) //debug三角网坐标
+
+  let newTriStrip = draw_line_Tris(obj.newPts, width) //删除重叠部分三角形的坐标条带
+
+  /*
+    let centralLine = toXYArray(points);
+*/
+  // 绘制
+  // return {
+  //   centralLine,
+  //   originStrip,
+  //   overlapTris,
+  //   newCentralLine,
+  //   debugTriNet,
+  //   newTriStrip,
+  // }
+  draw_three_objs(
+    gl,
+    centralLine,
+    originStrip,
+    overlapTris,
+    newCentralLine,
+    debugTriNet,
+    newTriStrip
+  )
+}

@@ -31,6 +31,14 @@
   <script src="./data/generalization.js"></script>
   <script src="./data/road.js"></script>
   <script src="./data/twoRoad.js"></script>
+  <!-- <script src="./data/forest_Project.js"></script> -->
+  <script src="./data/forest4.js"></script>
+  <script src="./data/forest3.js"></script>
+  <script src="./data/forest.js"></script>
+  <!-- <script src="./data/tree_Project.js"></script>
+  <script src="./data/tree1_Project.js"></script> -->
+  <script src="./data/tree1.js"></script>
+  <!-- <script src="./data/forest1_Project.js"></script> -->
 
   <script src="./js/BinaryTree.js"></script>
 
@@ -75,7 +83,7 @@
       let initline = initcentralLine(-0.2, -0.2);
       let triangleStrip = generateDoubleLine(initline, 0.05);
       var gl = getContextgl1();
-      drawlines(gl, triangleStrip, true, false);
+      drawlines(gl, triangleStrip, true, true);
     }
 
     //境界线
@@ -91,12 +99,18 @@
     }
 
     //二叉树渐变河流网
-    let stroke_array = getMapStructure(originData, false);//同时生成boundary
+    // let stroke_array = getMapStructure(originData, false);//同时生成boundary
     // let stroke_array1 = getMapStructure(originData, false);
+    // let stroke_array = getMapStructure(forest4, false);//同时生成boundary
+    let stroke_array = getMapStructure(tree1, false);//同时生成boundary
     let OBJ;
 
     function display_forest() {
       // clearBoundary();
+      //森林
+      // let stroke_array2 = getMapStructure(forest1_Project, false);//同时生成boundary
+      // let stroke_array2 = getMapStructure(originData, false);//同时生成boundary
+
       let forest = new Forest();
       forest.newForest(stroke_array);
       forest.DrawForest();
@@ -123,13 +137,13 @@
 
 
     //河流网
-    display_forest();//
-    riverNet();
+    display_forest();//渐变河网
+    riverNet();//未渐变
 
-    borderStrip();
-    doubleLine();
-    threeLine();
-    oneLine();
+    borderStrip();//境界线
+    doubleLine();//双线道路
+    threeLine();//三线道路
+    oneLine();//单线效果
 
     //着色器计算连续插值
     // init();
