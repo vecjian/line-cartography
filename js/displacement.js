@@ -15,13 +15,13 @@ function getStartEnd(seg) {
   return pts
 }
 
-//计算两点确定的直线参数
-function getLinePara(pt1, pt2) {
-  let A = (pt1.y - pt2.y) / (pt2.x - pt1.x)
-  let B = 1
-  let C = -pt2.y - (pt2.x * (pt1.y - pt2.y)) / (pt2.x - pt1.x)
-  return { A, B, C }
-}
+// //计算两点确定的直线参数
+// function getLinePara(pt1, pt2) {
+//   let A = (pt1.y - pt2.y) / (pt2.x - pt1.x)
+//   let B = 1
+//   let C = -pt2.y - (pt2.x * (pt1.y - pt2.y)) / (pt2.x - pt1.x)
+//   return { A, B, C }
+// }
 
 //计算点到直线的垂线和垂足,p3到p1p2直线的垂足坐标
 function getFootPoint(p1, p2, p3) {
@@ -48,22 +48,23 @@ function getCenter(pt1, pt2, percent) {
 
   center.x = percent * dx + pt1.x
   center.y = percent * dy + pt1.y
+  center.id = pt1.id
 
   return center
 }
 
 //传入折线段，移位百分比,得到新的折线段,
-function getNewLine(array, percent) {
+function getNewLine(arr, percent) {
   //1获取移位折线段
-  let arr = getStartEnd(array)
+  // let arr = getStartEnd(array)
   //2 计算新的坐标点
-  let pt1 = arr[0].point //起点
-  let pt2 = arr[arr.length - 1].point //终点
+  let pt1 = arr[0] //起点
+  let pt2 = arr[arr.length - 1] //终点
 
   let newArr = []
   for (var i = 0; i < arr.length; i++) {
-    let foot = getFootPoint(pt1, pt2, arr[i].point)
-    let center = getCenter(arr[i].point, foot, percent)
+    let foot = getFootPoint(pt1, pt2, arr[i])
+    let center = getCenter(arr[i], foot, percent)
     newArr.push(center)
   }
   console.log(newArr)
@@ -78,11 +79,10 @@ function init_Line() {
     let y = i * i
     let point = new Point(i, y)
     points.push(point)
-    let obj = { point, tag: true }
+    // let obj = { point, tag: true }
     pts.push(obj)
   }
-  console.log(pts)
-  return { pts, points }
+  return pointspoints
 }
 
 //绘制
@@ -91,13 +91,17 @@ function drawDisplacement(array1, array2) {
   let program = createProgram(gl, v_Shader, f_Shader)
   gl.useProgram(program.program)
 
+  //设置缩放参数
+  gl.uniform1f(program.u_Scale, 1.0)
+
+  //array1：原始坐标
   gl.uniform4fv(program.u_color, [0, 0, 1, 1])
   var riverBuffer = createBuffer(gl, new Float32Array(array1))
   bindAttribute(gl, riverBuffer, program.a_Position, 2)
   var n = array1.length / 2
   gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制多个三角形
 
-  //array2
+  //array2：移位后坐标
   gl.uniform4fv(program.u_color, [1, 0, 0, 1])
   var riverBuffer = createBuffer(gl, new Float32Array(array2))
   bindAttribute(gl, riverBuffer, program.a_Position, 2)
@@ -118,47 +122,93 @@ function test() {
   drawDisplacement(points, newPts)
 }
 
-test()
+// detect_displacement_draw(0.5, 0.0015)
+// test()
 
 //采用移位的方式去处理冲突
-function detect_displacement() {}
+//检测+移位
+function detect_displacement_draw(gl, points, percent, width) {
+  //1 获取折线点的坐标points
 
-//注意这是与前面重合的函数，需进行修改得到计算的坐标
-// 绘制，检测，重绘,para:points:Point类
-function draw_detect(gl, points, width) {
-  //计算了很多遍插值
+  //2 检测并标记冲突位置+移位
+  //3 对冲突进行移位，得到新的折现坐标串
+  let obj = sign_Overlap_Tris(points, percent, width)
+  // let overlapTris = (obj.array = obj.overlap_Tris)
+  // let newPts = obj.newPts
+  //4 生成原来的+新的坐标串
   let centralLine = toXYArray(transform1(points)) //坐标转换
 
   let originStrip = draw_line_Tris(points, width) //原始剖分三角形坐标
 
-  let obj = draw_Triobjs(points, width) // 重叠三角形坐标
-  let overlapTris = obj.array
-
-  let newCentralLine = toXYArray(transform1(obj.newPts)) //已经删除处理后的坐标
+  // let newCentralLine = toXYArray(transform1(newPts)) //已经删除处理后的坐标
 
   let debugTriNet = draw_debug_Trinet(points, width) //debug三角网坐标
 
-  let newTriStrip = draw_line_Tris(obj.newPts, width) //删除重叠部分三角形的坐标条带
+  // let newTriStrip = draw_line_Tris(newPts, width) //删除重叠部分三角形的坐标条带
 
-  /*
-    let centralLine = toXYArray(points);
-*/
-  // 绘制
-  // return {
-  //   centralLine,
-  //   originStrip,
-  //   overlapTris,
-  //   newCentralLine,
-  //   debugTriNet,
-  //   newTriStrip,
-  // }
+  //4 绘制新的坐标
   draw_three_objs(
     gl,
     centralLine,
     originStrip,
-    overlapTris,
-    newCentralLine,
-    debugTriNet,
-    newTriStrip
+    // overlapTris,
+    // newCentralLine,
+    debugTriNet
+    // newTriStrip
   )
+  // clearBoundary()
+}
+
+// 在一条三角形条带中，遍历每个三角形，比较并标记
+// para:   triangles={{p1,p2,p3}，{}，{}，……},为Triangle对象数组
+function sign_Overlap_Tris(points, percent, width) {
+  console.log(points)
+  let pos = insertPts(points, width)
+  let triangles = get_Tris(pos.pts1, pos.pts2) //得到所有三角形串坐标
+
+  let newPts = points,
+    overlap_Tris = []
+  let len = triangles.length
+  // 保存找到的有位置重叠的三角形
+  var flag = false
+  for (var i = 0; i < len; i++) {
+    //triangles[j]不与前面的三角形发生重叠
+    for (var j = i + 1; j < len && !triangles[j].tag; j++) {
+      // 判断两个三角形的位置关系
+      flag = Trianglesoverlap(triangles[i], triangles[j])
+      // flag=true,有位置重叠
+      if (flag) {
+        console.log('有冲突')
+        triangles[i].tag = true
+        triangles[j].tag = true
+        // 保存两个重叠的三角形
+        overlap_Tris.push(triangles[i])
+        overlap_Tris.push(triangles[j])
+        //一边计算，一边替换
+        newPts = replacePts(percent, newPts, triangles[i].id, triangles[j].id) //从更新后的数组进行替代
+      }
+    }
+  }
+  if (overlap_Tris.length < 1) {
+    console.log('折线没有重叠部分')
+    overlap_Tris.length = 0 //清空数组
+  }
+  return { overlap_Tris, newPts }
+}
+
+//计算截取的折线段，获取新的替代片段
+function replacePts(percent, points, start, end) {
+  let old = points
+  let pts = []
+  // if (end < points.length) {
+  // pts = points.slice(start, end + 1) //截取需要进行移位的部分
+  // } else {
+  pts = points.slice(start, end) //截取需要进行移位的部分
+  // }
+  let newPts = getNewLine(pts, percent)
+  for (var i = 0; i < pts.length; i++) {
+    old[start + i] = newPts[i]
+  }
+  console.log(old)
+  return old //替代后的坐标串
 }

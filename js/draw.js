@@ -89,6 +89,13 @@ function getContextgl5() {
   // gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
   return gl
 }
+//获取GL句柄
+function getContextgl6() {
+  var canvas = document.getElementById('paint6')
+  var gl = canvas.getContext('webgl', { antialias: true })
+  // gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+  return gl
+}
 
 //绘制渐变的河网，传入颜色(注意绘制二叉树时未传入颜色)
 // para:  color=[r,g,b,a]
@@ -176,7 +183,7 @@ function draw_three_objs(
   for (let i = 0; i < debugTriNet.length; i++) {
     var riverBuffer = createBuffer(gl, new Float32Array(debugTriNet[i]))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
-    gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
+    // gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
   }
 
   //绘制新的三角剖分条带
@@ -186,7 +193,7 @@ function draw_three_objs(
     riverBuffer = createBuffer(gl, new Float32Array(newTriStrip))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     n = newTriStrip.length / 2
-    gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+    // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
     // }
   }
 
@@ -196,7 +203,7 @@ function draw_three_objs(
     var riverBuffer = createBuffer(gl, new Float32Array(newCentralLine))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     n = newCentralLine.length / 2
-    gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制新的折线段
+    // gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制新的折线段
   }
 }
 

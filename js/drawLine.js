@@ -46,14 +46,7 @@ function draw_detect(gl, points, width) {
 //绘制三角形串表示的线
 function draw_line_Tris(points, width, isConverted) {
   let pos = insertPts(points, width)
-  // var array;
-  // if (!isConverted) {
-  //   array = toXYArray(ptsToTriangles(pos.pts1, pos.pts2)); //得到所有组成线段的三角形坐标
-  // } else {
   var array = convertCor(toXYArray(ptsToTriangles(pos.pts1, pos.pts2))) //得到所有组成线段的三角形坐标
-  // }
-  // let arr = [];
-  // arr.push(array);
   return array
 }
 

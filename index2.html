@@ -13,12 +13,13 @@
 </head>
 
 <body>
-  <canvas id="paint0" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <!-- <canvas id="paint0" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas> -->
   <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <!-- <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas> -->
+  <canvas id="paint6" width="400" height="400" style="height: auto; width: auto"></canvas>
 
   <!-- <script src="./js/."></script> -->
   <script src="./lib/earcut.dev.js"></script>
@@ -38,6 +39,9 @@
   <!-- <script src="./data/tree_Project.js"></script>
   <script src="./data/tree1_Project.js"></script> -->
   <script src="./data/tree1.js"></script>
+  <script src="./data/oneline.js"></script>
+
+
   <!-- <script src="./data/forest1_Project.js"></script> -->
 
   <script src="./js/BinaryTree.js"></script>
@@ -51,6 +55,7 @@
   <script src="./js/index.js"></script>
   <script src="./js/contour.js"></script>
   <script src="./js/brigde.js"></script>
+  <script src="./js/displacement.js"></script>
 
   <script>
     // var pts = initLine(5);
@@ -127,23 +132,36 @@
     //单线看效果
     function oneLine() {
       clearBoundary();
-      let stroke_array2 = getMapStructure(generalizationLine, false);
+      let stroke_array2 = getMapStructure(oneline, false);
       // let stroke_array2 = getMapStructure(road, false);
       var gl = getContextgl3();
-      draw_detect(gl, stroke_array2[0].points, 0.0015);
+      draw_detect(gl, stroke_array2[0].points, 0.004);
+      clearBoundary();
+    }
+
+    //单线移位
+    function oneline1() {
+
+      clearBoundary()
+      let stroke_array2 = getMapStructure(oneline, false);
+
+      var gl = getContextgl6();
+      detect_displacement_draw(gl, stroke_array2[0].points, 0.05, 0.003)
       clearBoundary();
     }
 
 
 
     //河流网
-    display_forest();//渐变河网
-    riverNet();//未渐变
+    // display_forest();//渐变河网
+    // riverNet();//未渐变
 
-    borderStrip();//境界线
-    doubleLine();//双线道路
-    threeLine();//三线道路
+    // borderStrip();//境界线
+    // doubleLine();//双线道路
+    // threeLine();//三线道路
     oneLine();//单线效果
+
+    oneline1()
 
     //着色器计算连续插值
     // init();
