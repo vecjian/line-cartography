@@ -5,14 +5,15 @@
 //2生成最外层桥梁条带
 //3贴图???
 
-// get_twoLineCo·nflict(twoRoad, 0.0015)
+// get_twoLineConflict(twoRoad, 0.0015)
 //数据获取和准备
 function getData(data) {
     let features0 = data.features[0]
     let features1 = data.features[1]
-    var pts0 = features0.geometry.coordinates[0]
-    var pts1 = features1.geometry.coordinates[0]
-
+        // var pts0 = features0.geometry.coordinates[0]
+        // var pts1 = features1.geometry.coordinates[0]
+    var pts0 = features0.geometry.coordinates
+    var pts1 = features1.geometry.coordinates
     var vec0 = []
     var vec1 = []
 
@@ -25,8 +26,6 @@ function getData(data) {
         vec1.push(pt)
     }
 
-    // vec0 = transform2(vec0, bound)
-    // vec1 = transform2(vec1, bound)
     console.log(vec0)
     console.log(vec1)
 
@@ -37,21 +36,21 @@ function getData(data) {
 function get_twoLineConflict(roads, width) {
     // getMapStructure(twoRoad, false)
     var obj = getData(roads)
-    var trianglesOBJ = dealData(obj.vec0, obj.vec1, width) //计算叠置的三角形
-    var gl = getContextgl6()
-    draw_bridge(gl, trianglesOBJ)
-        // return trianglesOBJ
-}
-
-//para:(x,y)array
-function dealData(road1, road2, width) {
-    //计算外接矩形
+        //计算外接矩形
     var bound = {
         maxX: 110.5204,
         minX: 110.4636,
         maxY: 29.1147,
         minY: 29.05,
     }
+    var OBJ = dealData(obj.vec0, obj.vec1, width, bound) //计算叠置的三角形
+    var gl = getContextgl6()
+    draw_bridge(gl, OBJ)
+        // return trianglesOBJ
+}
+
+//para:(x,y)array
+function dealData(road1, road2, width, bound) {
     boundary = bound //给全局变量boundary赋初值
     console.log(boundary)
         //坐标转换(x,y)->Point,同时添加id
@@ -118,7 +117,7 @@ function overLapTriInDifferentline(triangleStrip1, triangleStrip2) {
         }
         //重复的三角形只存一次
         if (m > 0) {
-            tags1.push(triangleStrip2[j].id) //标记三角形的id
+            // tags1.push(triangleStrip2[j].id) //标记三角形的id
             overlap_Tris1.push(triangleStrip1[i])
         }
     }
@@ -185,12 +184,12 @@ function draw_bridge(gl, obj) {
         }
     }
     /*
-                                              // //绘制三角网
-                                              gl.uniform4fv(program.u_color, [0.8, 0.0, 0.0, 0.8])
-                                              for (let i = 0; i < debugTriNet.length; i++) {
-                                                  var riverBuffer = createBuffer(gl, new Float32Array(debugTriNet[i]))
-                                                  bindAttribute(gl, riverBuffer, program.a_Position, 2)
-                                                  gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
-                                              }
-                                              */
+                                                                                                      // //绘制三角网
+                                                                                                      gl.uniform4fv(program.u_color, [0.8, 0.0, 0.0, 0.8])
+                                                                                                      for (let i = 0; i < debugTriNet.length; i++) {
+                                                                                                          var riverBuffer = createBuffer(gl, new Float32Array(debugTriNet[i]))
+                                                                                                          bindAttribute(gl, riverBuffer, program.a_Position, 2)
+                                                                                                          gl.drawArrays(gl.LINE_LOOP, 0, 3) //绘制DEBUG三角网
+                                                                                                      }
+                                                                                                      */
 }

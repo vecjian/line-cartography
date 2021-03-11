@@ -21,66 +21,69 @@ const F_shader = `
         float y = (gl_FragCoord[1] / 600.0 - 0.5) / 0.5;
         float dis = getDis(x, y);
         float percent = 0.0;
-        // if(dis > u_halfHeight){
-        if(dis > 0.0&&dis<0.1*u_halfHeight*2.0){
+        
+        if(dis > u_halfHeight){
+          gl_FragColor = vec4(0.85, 0.85, 0.85, 1.0);
+        } else{
+          gl_FragColor = vec4(0.9, 0.9, 0.9, 1.0);
+        }
+    
+
+
+        /*
+        if(dis > 0.0&&dis<0.3*u_halfHeight*2.0){
           gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
             // percent = (2.0 * u_halfHeight - dis) / u_halfHeight;
             // percent = 0.7;
-        }else if(dis>0.1*u_halfHeight*2.0&&dis<0.9*u_halfHeight*2.0){
+        }else if(dis>0.3*u_halfHeight*2.0&&dis<0.7*u_halfHeight*2.0){
           gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
 
-            // percent = dis / u_halfHeight;
             // percent = dis / u_halfHeight;
             // percent = 1.0;
         }else{
           gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
         }
         // gl_FragColor = vec4(0.5, 0.5, 0.5, percent);
-        // gl_FragColor = vec4(1.0, 0.0, 0.0,1.0);
+        // gl_FragColor = vec4(0.0, 0.0, 0.0,1.0);*/
     }
 `
 
 // const Bounds = [-0.5, 0.0, -0.5, 0.4, -0.2, 0.2, -0.2, -0.1, 1, 0.4, 1, 0.7];
 const Bounds = [-0.3, -0.2, -0.3, 0.2, 0.3, -0.2, 0.3, 0.2]
-const Bounds1 = [
-  -0.3,
-  -0.2,
-  -0.3,
-  0.2,
-  0.3,
-  -0.2,
-  0.3,
-  0.2,
-  0.48,
-  -0.4,
-  0.48,
-  0.0,
+const Bounds1 = [-0.3, -0.2, -0.3,
+    0.2,
+    0.3, -0.2,
+    0.3,
+    0.2,
+    0.48, -0.4,
+    0.48,
+    0.0,
 ]
 
 function getHalfHeight(bounds) {
-  let [x1, y1, x2, y2, x3, y3, x4, y4] = bounds
-  let A = (y3 - y1) / (x1 - x3)
-  let B = 1
-  let C = -y1 - (x1 * (y3 - y1)) / (x1 - x3)
-  let dis = Math.abs(A * x2 + B * y2 + C) / Math.sqrt(A * A + B * B)
-  return { A, B, C, halfHeight: dis / 2 }
+    let [x1, y1, x2, y2, x3, y3, x4, y4] = bounds
+    let A = (y3 - y1) / (x1 - x3)
+    let B = 1
+    let C = -y1 - (x1 * (y3 - y1)) / (x1 - x3)
+    let dis = Math.abs(A * x2 + B * y2 + C) / Math.sqrt(A * A + B * B)
+    return { A, B, C, halfHeight: dis / 2 }
 }
 
 function init() {
-  let gl = getGL(window, { preserveDrawingBuffer: false, fixretina: false })
-  let program = createProgram(gl, V_shader, F_shader)
-  let { A, B, C, halfHeight } = getHalfHeight(Bounds)
-  // console.log(A, B, C, halfHeight);
-  gl.useProgram(program.program)
+    let gl = getGL(window, { preserveDrawingBuffer: false, fixretina: false })
+    let program = createProgram(gl, V_shader, F_shader)
+    let { A, B, C, halfHeight } = getHalfHeight(Bounds)
+        // console.log(A, B, C, halfHeight);
+    gl.useProgram(program.program)
 
-  let vBuffer = createBuffer(gl, new Float32Array(Bounds))
-  bindAttribute(gl, vBuffer, program.a_pos, 2)
-  gl.uniform1f(program.u_halfHeight, halfHeight)
+    let vBuffer = createBuffer(gl, new Float32Array(Bounds))
+    bindAttribute(gl, vBuffer, program.a_pos, 2)
+    gl.uniform1f(program.u_halfHeight, halfHeight)
 
-  gl.uniform1f(program.u_A, A)
-  gl.uniform1f(program.u_B, B)
-  gl.uniform1f(program.u_C, C)
-  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+    gl.uniform1f(program.u_A, A)
+    gl.uniform1f(program.u_B, B)
+    gl.uniform1f(program.u_C, C)
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
 }
 
 // init();
@@ -88,24 +91,24 @@ function init() {
 
 // 测试折线段可否用着色器实现
 function multiLine(Bounds2) {
-  let gl = getGL(window, { preserveDrawingBuffer: false, fixretina: false })
-  let program = createProgram(gl, V_shader, F_shader)
+    let gl = getGL(window, { preserveDrawingBuffer: false, fixretina: false })
+    let program = createProgram(gl, V_shader, F_shader)
 
-  //每一个四边形单独计算并绘制
-  for (var i = 0; i < Bounds2.length - 7; i = i + 4) {
-    const bounds = Bounds2.slice(i, i + 8)
-    let { A, B, C, halfHeight } = getHalfHeight(bounds)
-    console.log(A, B, C, halfHeight)
-    gl.useProgram(program.program)
+    //每一个四边形单独计算并绘制
+    for (var i = 0; i < Bounds2.length - 7; i = i + 4) {
+        const bounds = Bounds2.slice(i, i + 8)
+        let { A, B, C, halfHeight } = getHalfHeight(bounds)
+        console.log(A, B, C, halfHeight)
+        gl.useProgram(program.program)
 
-    let vBuffer = createBuffer(gl, new Float32Array(bounds))
-    bindAttribute(gl, vBuffer, program.a_pos, 2)
-    gl.uniform1f(program.u_halfHeight, halfHeight)
+        let vBuffer = createBuffer(gl, new Float32Array(bounds))
+        bindAttribute(gl, vBuffer, program.a_pos, 2)
+        gl.uniform1f(program.u_halfHeight, halfHeight)
 
-    gl.uniform1f(program.u_A, A)
-    gl.uniform1f(program.u_B, B)
-    gl.uniform1f(program.u_C, C)
-    // gl.drawArrays(gl.TRIANGLE_FAN, 0, 4)
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
-  }
+        gl.uniform1f(program.u_A, A)
+        gl.uniform1f(program.u_B, B)
+        gl.uniform1f(program.u_C, C)
+            // gl.drawArrays(gl.TRIANGLE_FAN, 0, 4)
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
+    }
 }

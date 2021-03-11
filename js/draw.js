@@ -97,6 +97,13 @@ function getContextgl6() {
     return gl
 }
 
+function getContextgl7() {
+    var canvas = document.getElementById('paint7')
+    var gl = canvas.getContext('webgl', { antialias: true })
+        // gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    return gl
+}
+
 //绘制渐变的河网，传入颜色(注意绘制二叉树时未传入颜色)
 // para:  color=[r,g,b,a]
 function drawRiver(array) {
@@ -150,7 +157,7 @@ function draw_three_objs(
     gl.useProgram(program.program)
 
     //设置缩放参数
-    gl.uniform1f(program.u_Scale, 1.0)
+    gl.uniform1f(program.u_Scale, 1.5)
         //绘制原始剖分三角形
     gl.uniform4fv(program.u_color, [0.0, 0.2, 1.0, 0.7])
         // for (let i = 0; i < originStrip.length; i++) {

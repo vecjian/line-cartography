@@ -207,7 +207,7 @@ function sign_Overlap_Tris(points, percent, width) {
 //计算截取的折线段，获取新的替代片段
 function replacePts(percent, points, start, end) {
     let old = points.slice(0) //深拷贝
-    let gap = Math.floor((end - start) / 3)
+    let gap = Math.floor((end - start) / 5)
 
     let seg = old.slice(start, end + gap + 1)
     let arr = direction(seg) //id
@@ -217,9 +217,9 @@ function replacePts(percent, points, start, end) {
 
     lastPts = old.slice(start, arr[0]) //截取需要进行移位的部分
 
-    let temp = arr[arr.length - 1] - gap
+    let temp = arr[arr.length - 1] - gap + 1
 
-    nextPts = old.slice(temp, end + gap) //截取需要进行移位的部分
+    nextPts = old.slice(temp, end + gap + 1) //截取需要进行移位的部分
 
     let newPts = getNewLine(lastPts, percent)
 
