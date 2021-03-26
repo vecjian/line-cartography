@@ -86,13 +86,17 @@ function dealData(road1, road2, width, bound) {
 function convertCor2(xyArr, bound) {
     let arr = []
     for (var i = 0; i < xyArr.length; i = i + 2) {
-        let x =
-            ((2 * (xyArr[i] - bound.minX)) / (bound.maxX - bound.minX) - 1) * 0.95
-        arr.push(x)
-            // console.log(xyArr[i + 1])
-        let y =
-            ((2 * (xyArr[i + 1] - bound.minY)) / (bound.maxY - bound.minY) - 1) * 0.95
-        arr.push(y)
+      let scale = Math.max((bound.maxX - bound.minX),(bound.maxY - bound.minY))
+      let x = (2 * (xyArr[i] - bound.minX)) / scale - 1
+      let y = (2 * (xyArr[i] - bound.minY)) / scale - 1
+      arr.push(x,y)
+        // let x =
+        //     ((2 * (xyArr[i] - bound.minX)) / (bound.maxX - bound.minX) - 1) * 0.95
+        // arr.push(x)
+        //     // console.log(xyArr[i + 1])
+        // let y =
+        //     ((2 * (xyArr[i + 1] - bound.minY)) / (bound.maxY - bound.minY) - 1) * 0.95
+        // arr.push(y)
     }
     return arr
 }

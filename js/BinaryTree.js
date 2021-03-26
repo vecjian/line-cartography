@@ -358,6 +358,23 @@ var boundary = {
     minY: 1e8,
 }
 
+// class BoundaryDict {
+//   constructor(){
+//     this._dict= {}
+//   }
+//   get(name){
+//     return this._dict[name]||[]
+//   }
+//   add(name,bound){
+//     this._dict[name] = bound
+//   }
+//   delete(name){
+//     this._dict.slice(this._dict.indexOf(name),1)
+//   }
+// }
+
+// boundaryDict = new BoundaryDict()
+
 //将boundary恢复默认值
 function clearBoundary() {
     boundary = {
@@ -406,8 +423,9 @@ function transform(points) {
         let x = points[i][0]
         let y = points[i][1]
             //转换到（-1,1）之间
-        x = (2 * (x - boundary.minX)) / (boundary.maxX - boundary.minX) - 1
-        y = (2 * (y - boundary.minY)) / (boundary.maxY - boundary.minY) - 1
+        let scale = math.max((boundary.maxX - boundary.minX),(boundary.maxY - boundary.minY))
+        x = (2 * (x - boundary.minX)) / scale - 1
+        y = (2 * (y - boundary.minY)) / scale - 1
         let vec = new Point(x, y, i)
         vecs.push(vec)
     }
@@ -435,9 +453,12 @@ function transform2(points, bound) {
     for (let i = 0; i < points.length; i++) {
         let x = points[i].x
         let y = points[i].y
-            //转换到（-1,1）之间
-        x = ((2 * (x - bound.minX)) / (bound.maxX - bound.minX) - 1) * 0.95
-        y = ((2 * (y - bound.minY)) / (bound.maxY - bound.minY) - 1) * 0.95
+            //转换到（-1,1）之间bound
+        let scale = Math.max((bound.maxX - bound.minX),(bound.maxY - bound.minY))
+        x = (2 * (x - bound.minX)) / scale - 1
+        y = (2 * (y - bound.minY)) / scale - 1
+        // x = ((2 * (x - bound.minX)) / (bound.maxX - bound.minX) - 1) * 0.95
+        // y = ((2 * (y - bound.minY)) / (bound.maxY - bound.minY) - 1) * 0.95
         let vec = new Point(x, y, i)
         vecs.push(vec)
     }
