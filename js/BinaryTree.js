@@ -2,7 +2,7 @@
 // 二叉树的节点为每一个河段
 // 河段指的是从河源到汇口之间或者汇口和汇口之间的河流段
 let widLevel = {
-    level1: 0.001,
+    level1: 0.0015,
     level2: 0.0016,
     level3: 0.0015,
     level4: 0.00095,
@@ -433,14 +433,18 @@ function transform(points) {
 }
 
 //points是Point类数组
-function transform1(points) {
+function transform1(points,bound) {
     let vecs = []
     for (let i = 0; i < points.length; i++) {
         let x = points[i].x
         let y = points[i].y
             //转换到（-1,1）之间
-        x = ((2 * (x - boundary.minX)) / (boundary.maxX - boundary.minX) - 1) * 0.95
-        y = ((2 * (y - boundary.minY)) / (boundary.maxY - boundary.minY) - 1) * 0.95
+        let scale = Math.max((bound.maxX - bound.minX),(bound.maxY - bound.minY))
+        x = (2 * (x - bound.minX)) / scale - 1
+        y = (2 * (y - bound.minY)) / scale - 1
+
+        // x = ((2 * (x - boundary.minX)) / (boundary.maxX - boundary.minX) - 1) * 0.95
+        // y = ((2 * (y - boundary.minY)) / (boundary.maxY - boundary.minY) - 1) * 0.95
         let vec = new Point(x, y, i)
         vecs.push(vec)
     }
@@ -453,7 +457,7 @@ function transform2(points, bound) {
     for (let i = 0; i < points.length; i++) {
         let x = points[i].x
         let y = points[i].y
-            //转换到（-1,1）之间bound
+        //转换到（-1,1）之间bound
         let scale = Math.max((bound.maxX - bound.minX),(bound.maxY - bound.minY))
         x = (2 * (x - bound.minX)) / scale - 1
         y = (2 * (y - bound.minY)) / scale - 1
@@ -610,10 +614,10 @@ function get_Tris(pts1, pts2) {
     var len = pts1.length //两个数组的长度相等
 
     for (var i = 0; i < len - 1; i++) {
-        let T = new Triangle(pts1[i], pts2[i], pts1[i + 1], i, false) //i为id值
-        position.push(T)
-        let R = new Triangle(pts2[i], pts2[i + 1], pts1[i + 1], i, false) //i为id值
-        position.push(R)
+        let T = new Triangle(pts1[i], pts2[i], pts1[i + 1], 2*i+1, false) //2*i+1为id值
+        // position.push(T)
+        let R = new Triangle(pts2[i], pts2[i + 1], pts1[i + 1], 2*(i+1), false) //2*(i+1)为id值????????注意已更改
+        position.push(T,R)
     }
     return position //返回三角形对象数组
 }
@@ -641,14 +645,14 @@ function get_Whole_arr(strokes, width, gl) {
     let arr_newtringleStrip = []
 
     let calculate = function(arr) {
-        line.push(toXYArray(transform1(arr))) //坐标转换
+        line.push(toXYArray(transform1(arr,boundary))) //坐标转换
 
         array_line.push(draw_line_Tris(arr, width)) //原始剖分三角形坐标
 
         let obj = draw_Triobjs(arr, width) // 重叠三角形坐标
         array_overlaptri.push(obj.array)
 
-        newPts.push(toXYArray(transform1(obj.newPts))) //已经删除处理后的坐标
+        newPts.push(toXYArray(transform1(obj.newPts,boundary))) //已经删除处理后的坐标
 
         array_debug.push(draw_debug_Trinet(arr, width)) //debug三角网坐标
 
@@ -673,14 +677,15 @@ function get_Whole_arr(strokes, width, gl) {
 
 //Draw with BinaryTree
 function get_Whole_Binaryarr(points, width) {
-    let centralLine = toXYArray(transform1(points)) //坐标转换
+    let centralLine = toXYArray(transform1(points,boundary)) //坐标转换
 
     let originStrip = draw_line_Tris(points, width) //原始剖分三角形坐标
 
     let obj = draw_Triobjs(points, width) // 重叠三角形坐标
     let overlapTris = obj.array
 
-    let newCentralLine = toXYArray(transform1(obj.newPts)) //已经删除处理后的坐标
+    console.log(boundary)
+    let newCentralLine = toXYArray(transform1(obj.newPts,boundary)) //已经删除处理后的坐标
 
     let debugTriNet = draw_debug_Trinet(points, width) //debug三角网坐标
 

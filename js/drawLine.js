@@ -7,14 +7,14 @@
 // 绘制，检测，重绘,para:points:Point类
 function draw_detect(gl, points, width) {
     //计算了很多遍插值
-    let centralLine = toXYArray(transform1(points)) //坐标转换
+    let centralLine = toXYArray(transform1(points,boundary)) //坐标转换
 
     let originStrip = draw_line_Tris(points, width) //原始剖分三角形坐标
 
     let obj = draw_Triobjs(points, width) // 重叠三角形坐标
     let overlapTris = obj.array
 
-    let newCentralLine = toXYArray(transform1(obj.newPts)) //已经删除处理后的坐标
+    let newCentralLine = toXYArray(transform1(obj.newPts,boundary)) //已经删除处理后的坐标
 
     let debugTriNet = draw_debug_Trinet(points, width) //debug三角网坐标
 
@@ -34,7 +34,7 @@ function draw_detect(gl, points, width) {
 //绘制三角形串表示的线
 function draw_line_Tris(points, width, isConverted) {
     let pos = insertPts(points, width)
-    var array = convertCor(toXYArray(ptsToTriangles(pos.pts1, pos.pts2))) //得到所有组成线段的三角形坐标
+    var array = convertCor(toXYArray(ptsToTriangles(pos.pts1, pos.pts2)),boundary) //得到所有组成线段的三角形坐标
     return array
 }
 
@@ -53,7 +53,7 @@ function draw_debug_Trinet(points, width) {
     }
 
     for (var i = 0; i < tri_xy.length; i++) {
-        tri_xy[i] = convertCor(tri_xy[i])
+        tri_xy[i] = convertCor(tri_xy[i],boundary)
     }
     // tri_xy = convertCor(tri_xy);
     return tri_xy
@@ -67,7 +67,7 @@ function draw_Triobjs(points, width) {
     let array = get_Tris(pos.pts1, pos.pts2) //得到所有组成线段的三角形坐标
     let overlapTris = get_Overlap_Tris(array, points) //找出所有产生重叠的三角形
     let newPts = overlapTris.newPts
-    array = Tris_to_XYarr(overlapTris.overlap_Tris) //将三角形坐标转换成xy数组
+    array = convertCor(Tris_to_XYarr(overlapTris.overlap_Tris) ,boundary)//将三角形坐标转换成xy数组
 
     return { array, newPts }
 }
@@ -141,31 +141,25 @@ function Tris_to_XYarr(triangles) {
     }
     let xyArr = []
 
-    for (var i = 0; i < len; i++) {
+    for (var i = 0; i < len&&triangles[i]!=-1; i++) {
         let ABC = []
         ABC = Triangle.get_Tris_XYarr(triangles[i])
         xyArr = xyArr.concat(toXYArray(ABC)) //数组拼接
     }
 
     //转换坐标
-    xyArr = convertCor(xyArr)
-        // console.log(xyArr);
+    // xyArr = convertCor(xyArr)？？？？？？？？？？？？
     return xyArr
 }
 
-function convertCor(xyArr) {
+function convertCor(xyArr,bound) {
     let arr = []
+    let scale = Math.max((bound.maxX - bound.minX),(bound.maxY - bound.minY))
+
     for (var i = 0; i < xyArr.length; i = i + 2) {
-        let x =
-            ((2 * (xyArr[i] - boundary.minX)) / (boundary.maxX - boundary.minX) - 1) *
-            0.95
-        arr.push(x)
-            // console.log(xyArr[i + 1])
-        let y =
-            ((2 * (xyArr[i + 1] - boundary.minY)) / (boundary.maxY - boundary.minY) -
-                1) *
-            0.95
-        arr.push(y)
+        let x = (2 * (xyArr[i] - bound.minX)) / scale - 1
+        let y = (2 * (xyArr[i+1] - bound.minY)) / scale - 1
+        arr.push(x,y)
     }
     return arr
 }

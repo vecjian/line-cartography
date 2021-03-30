@@ -50,45 +50,78 @@ function get_twoLineConflict(roads, width) {
 }
 
 //para:(x,y)array
-function dealData(road1, road2, width, bound) {
-    boundary = bound //给全局变量boundary赋初值
-    console.log(boundary)
+//flag:
+function dealData(road1, road2, width, bound,flag) {
+    // boundary = bound //给全局变量boundary赋初值
+    // console.log(boundary)
         //坐标转换(x,y)->Point,同时添加id
-        // 坐标转换至（-1,1）
-    var roadVecs1 = transform2(road1, bound) //(-1,1)之间的坐标
-    var roadVecs2 = transform2(road2, bound) //(-1,1)之间的坐标
+    // 坐标转换至（-1,1）
+    var roadVecs1 = transform2(road1, bound) //坐标值在(-1,1)之间
+    var roadVecs2 = transform2(road2, bound) //坐标值在(-1,1)之间
     let centralLine1 = toXYArray(roadVecs1)
-    let centralLine2 = toXYArray(roadVecs2)
-    let centralLine = [centralLine1, centralLine2]
+
+    let centralLine2 = toXYArray(roadVecs2)//单线状
+    let centralLine = [centralLine1, centralLine2]//单线状
 
     //原始剖分三角形
     let pos1 = insertPts(road1, width)
-    var originStrip1 = convertCor2(
-        toXYArray(ptsToTriangles(pos1.pts1, pos1.pts2)),
-        bound
-    )
+    // var originStrip1 = convertCor2(
+    //     toXYArray(ptsToTriangles(pos1.pts1, pos1.pts2)),
+    //     bound
+    // )
     let pos2 = insertPts(road2, width)
-    var originStrip2 = convertCor2(
-        toXYArray(ptsToTriangles(pos2.pts1, pos2.pts2)),
-        bound
-    )
-    let originStrip = [originStrip1, originStrip2]
+    // var originStrip2 = convertCor2(
+    //     toXYArray(ptsToTriangles(pos2.pts1, pos2.pts2)),
+    //     bound
+    // )
+    // let originStrip = [originStrip1, originStrip2]
 
     // 0曲线插值，顶点->三角形条带
     var roadStrip1 = get_Tris(pos1.pts1, pos1.pts2)
     var roadStrip2 = get_Tris(pos2.pts1, pos2.pts2)
 
-    //1计算相邻两条等高线之间是否有叠置
+    // 1计算相邻两条等高线之间是否有叠置
     var overlapTris = overLapTriInDifferentline(roadStrip1, roadStrip2)
+    overlapTris[0] = convertCor(overlapTris[0],bound);
+    overlapTris[1] = convertCor(overlapTris[1],bound);
+    
+    // 2选择是否将重叠部分进行间断绘制
+    let idArr1 = overlapTris[2]
+    let idArr2 = overlapTris[3]
+    let originStrip = []
+    if(flag){
+      // let originStrip1 = convertCor(Tris_to_XYarr(replace(roadStrip1,idArr1)),bound)//先删除一条线段的重叠三角形
+      let originStrip2 = convertCor(Tris_to_XYarr(replace(roadStrip2,idArr2)),bound)
+      
+      let originStrip1 = convertCor(Tris_to_XYarr(roadStrip1),bound)
+      // let originStrip2 = convertCor(Tris_to_XYarr(roadStrip2),bound)
+      originStrip.push(originStrip1, originStrip2)
+    }
+    else{
+      let originStrip1 = convertCor(Tris_to_XYarr(roadStrip1),bound)
+      let originStrip2 = convertCor(Tris_to_XYarr(roadStrip2),bound)
+      originStrip.push(originStrip1, originStrip2)
+    }
+
     return { centralLine, originStrip, overlapTris }
+}
+
+//将重叠三角形数组的重叠图元换成-1
+function replace(triStrip,tags){
+  let len = tags.length
+  let Strip = triStrip.slice(0)//深拷贝，不改变原来的值
+  for(var i = 0;i<len;i++){
+    Strip.splice(tags[i],1,-1)
+  }
+  return Strip
 }
 
 function convertCor2(xyArr, bound) {
     let arr = []
+    let scale = Math.max((bound.maxX - bound.minX),(bound.maxY - bound.minY))
     for (var i = 0; i < xyArr.length; i = i + 2) {
-      let scale = Math.max((bound.maxX - bound.minX),(bound.maxY - bound.minY))
       let x = (2 * (xyArr[i] - bound.minX)) / scale - 1
-      let y = (2 * (xyArr[i] - bound.minY)) / scale - 1
+      let y = (2 * (xyArr[i+1] - bound.minY)) / scale - 1
       arr.push(x,y)
         // let x =
         //     ((2 * (xyArr[i] - bound.minX)) / (bound.maxX - bound.minX) - 1) * 0.95
@@ -114,18 +147,21 @@ function overLapTriInDifferentline(triangleStrip1, triangleStrip2) {
             flag = Trianglesoverlap(triangleStrip1[i], triangleStrip2[j])
             if (flag) {
                 console.log('俩曲线有冲突')
-                m++
+                m = m+1
+                if(m==1){
+                  tags1.push(triangleStrip1[i].id) //标记三角形的id
+                }
                 tags2.push(triangleStrip2[j].id)
                 overlap_Tris2.push(triangleStrip2[j])
             }
         }
         //重复的三角形只存一次
         if (m > 0) {
-            // tags1.push(triangleStrip2[j].id) //标记三角形的id
-            overlap_Tris1.push(triangleStrip1[i])
+          // tags1.push(triangleStrip2[j].id) //标记三角形的id
+          overlap_Tris1.push(triangleStrip1[i])
         }
     }
-    return [Tris_to_XYarr(overlap_Tris1), Tris_to_XYarr(overlap_Tris2)]
+    return [Tris_to_XYarr(overlap_Tris1), Tris_to_XYarr(overlap_Tris2),tags1,tags2]
 }
 
 //找到数组中最大值和最小值
@@ -197,3 +233,52 @@ function draw_bridge(gl, obj) {
                                                                                                       }
                                                                                                       */
 }
+
+
+
+/*
+ *间断绘制发生重叠的路面和等高线 
+ * 
+ * 
+ * 
+ * 
+ */
+/*
+//para:(x,y)array
+function dealData(road1, road2, width, bound) {
+  // boundary = bound //给全局变量boundary赋初值
+  // console.log(boundary)
+      //坐标转换(x,y)->Point,同时添加id
+  // 坐标转换至（-1,1）
+  var roadVecs1 = transform2(road1, bound) //坐标值在(-1,1)之间
+  var roadVecs2 = transform2(road2, bound) //坐标值在(-1,1)之间
+  let centralLine1 = toXYArray(roadVecs1)
+  let centralLine2 = toXYArray(roadVecs2)//单线状
+  let centralLine = [centralLine1, centralLine2]//单线状
+
+  //原始剖分三角形
+  let pos1 = insertPts(road1, width)
+  var originStrip1 = convertCor2(
+      toXYArray(ptsToTriangles(pos1.pts1, pos1.pts2)),
+      bound
+  )
+  let pos2 = insertPts(road2, width)
+  var originStrip2 = convertCor2(
+      toXYArray(ptsToTriangles(pos2.pts1, pos2.pts2)),
+      bound
+  )
+  let originStrip = [originStrip1, originStrip2]
+
+  // 0曲线插值，顶点->三角形条带
+  var roadStrip1 = get_Tris(pos1.pts1, pos1.pts2)
+  var roadStrip2 = get_Tris(pos2.pts1, pos2.pts2)
+
+  // 1计算相邻两条等高线之间是否有叠置
+  var overlapTris = overLapTriInDifferentline(roadStrip1, roadStrip2)
+  overlapTris[0] = convertCor(overlapTris[0],bound);
+  overlapTris[1] = convertCor(overlapTris[1],bound);
+  console.log(overlapTris)
+
+  return { centralLine, originStrip, overlapTris }
+}
+*/

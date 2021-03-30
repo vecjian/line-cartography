@@ -139,29 +139,30 @@ var bound2 = {
     maxY: 3251833.665194649,
     minY: 3249215.8242938635,
 }
-draw_contours(contour4, 55)
     //判断重叠位置
 function draw_contours(data, width) {
     var strokeArr = getMapStructure(data)
 
-    for (var i = 0; i < strokeArr.length - 2; i = i + 2) {
+    // for (var i = 0; i < strokeArr.length - 2; i = i + 2) {
+    for (var i = 0; i < 2; i = i + 2) {
         let obj = dealData(
                 strokeArr[i].points,
                 strokeArr[i + 1].points,
                 width,
-                bound2
+                bound2,
+                true
             ) //计算叠置的三角形
         trianglesOBJ.centralLine.push(obj.centralLine[0])
         trianglesOBJ.originStrip.push(obj.originStrip[0])
         trianglesOBJ.overlapTris.push(obj.overlapTris[0])
 
-        // trianglesOBJ.centralLine.push(obj.centralLine[1])
-        // trianglesOBJ.originStrip.push(obj.originStrip[1])
-        // trianglesOBJ.overlapTris.push(obj.overlapTris[1])
+        trianglesOBJ.centralLine.push(obj.centralLine[1])
+        trianglesOBJ.originStrip.push(obj.originStrip[1])
+        trianglesOBJ.overlapTris.push(obj.overlapTris[1])
     }
     var gl = getContextgl6()
 
     draw_bridge(gl, trianglesOBJ)
 }
 
-//再次设置变量
+draw_contours(contour4, 35)

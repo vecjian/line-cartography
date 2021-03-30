@@ -139,13 +139,13 @@ function detect_displacement_draw(gl, points, percent, width) {
 
     //3 对冲突进行移位，得到新的折现坐标串
     let obj = sign_Overlap_Tris(points, percent, width)
-    let overlapTris = Tris_to_XYarr(obj.overlap_Tris)
+    let overlapTris = convertCor(Tris_to_XYarr(obj.overlap_Tris),boundary)
     let newPts = obj.newPts
         //4 生成原来的+新的坐标串
-    let centralLine = toXYArray(transform1(points)) //坐标转换
+    let centralLine = toXYArray(transform1(points,boundary)) //坐标转换
     let originStrip = draw_line_Tris(points, width) //原始剖分三角形坐标
 
-    let newCentralLine = toXYArray(transform1(newPts)) //已经删除处理后的坐标
+    let newCentralLine = toXYArray(transform1(newPts,boundary)) //已经删除处理后的坐标
 
     let debugTriNet = draw_debug_Trinet(points, width) //debug三角网坐标
 
