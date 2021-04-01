@@ -2,183 +2,186 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <style>
-        canvas {
-            border: 1px solid black;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
 </head>
 
 <body>
-    <canvas id="paint0" width="400" height="400" style="height: auto; width: auto"></canvas>
-    <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint0" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <!-- <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas>
-    <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
-    <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas>
-    <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas>
-    <canvas id="paint6" width="400" height="400" style="height: auto; width: auto"></canvas>
-    <canvas id="paint7" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas> -->
+  <canvas id="paint6" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint7" width="400" height="400" style="height: auto; width: auto"></canvas>
 
-    <!-- <script src="./js/."></script> -->
-    <script src="./lib/earcut.dev.js"></script>
-    <script src="./lib/GL_Util1.js"></script>
+  <!-- <script src="./js/."></script> -->
+  <script src="./lib/earcut.dev.js"></script>
+  <script src="./lib/GL_Util1.js"></script>
 
-    <script src="./data/originData.js"></script>
-    <script src="./data/border_simplify.js"></script>
-    <script src="./data/border_simplify1.js"></script>
-    <script src="./data/border0.js"></script>
-    <script src="./data/generalization.js"></script>
-    <script src="./data/road.js"></script>
-    <script src="./data/twoRoad.js"></script>
-    <!-- <script src="./data/forest_Project.js"></script> -->
-    <script src="./data/forest4.js"></script>
-    <script src="./data/forest3.js"></script>
-    <script src="./data/forest.js"></script>
-    <script src="./data/contour4.js"></script>
-    <!-- <script src="./data/tree_Project.js"></script>
+  <script src="./data/originData.js"></script>
+  <script src="./data/border_simplify.js"></script>
+  <script src="./data/border_simplify1.js"></script>
+  <script src="./data/border0.js"></script>
+  <script src="./data/generalization.js"></script>
+  <script src="./data/road.js"></script>
+  <script src="./data/twoRoad.js"></script>
+  <!-- <script src="./data/forest_Project.js"></script> -->
+  <script src="./data/forest4.js"></script>
+  <script src="./data/forest3.js"></script>
+  <script src="./data/forest.js"></script>
+  <script src="./data/contour4.js"></script>
+  <!-- <script src="./data/tree_Project.js"></script>
   <script src="./data/tree1_Project.js"></script> -->
-    <script src="./data/tree1.js"></script>
-    <script src="./data/oneline4.js"></script>
-    <script src="./data/oneline5.js"></script>
-    <script src="./data/oneline1.js"></script>
+  <script src="./data/tree1.js"></script>
+  <script src="./data/oneline4.js"></script>
+  <script src="./data/oneline5.js"></script>
+  <script src="./data/oneline1.js"></script>
 
-    <script src="./js/BinaryTree.js"></script>
+  <script src="./js/BinaryTree.js"></script>
 
-    <script src="./js/draw.js"></script>
-    <script src="./js/PointInTri.js"></script>
-    <script src="./js/symbol.js"></script>
-    <script src="./js/boundaryLine.js"></script>
-    <script src="./js/smoothLine.js"></script>
-    <script src="./js/drawLine.js"></script>
-    <script src="./js/index.js"></script>
-    <script src="./js/bridge.js"></script>
-    <script src="./js/displacement.js"></script>
-    <script src="./js/contour.js"></script>
-
-
-    <script>
-        // var pts = initLine(5);
-        //初始化非封闭线段
-        function initcentralLine(m, n) {
-            const a = 0.05;
-            var vectors = [];
-            for (var i = 0; i < 20; i++) {
-                let point = new Point(m, n);
-                vectors.push(point);
-                m = m + a;
-                n = n + a;
-            }
-            return vectors;
-        }
-
-        // 双线
-        function doubleLine() {
-            // 初始化中心线坐标
-            let initline = initcentralLine(-0.2, -0.2);
-            // let initline = initclosedLine(-0.2, -0.2);
-            let triangleStrip = generateDoubleLine(initline, 0.05);
-            var gl = getContextgl2();
-            drawlines(gl, triangleStrip, false, false);
-        }
-
-        // 三线
-        function threeLine() {
-            // 初始化中心线坐标
-            let initline = initcentralLine(-0.2, -0.2);
-            let triangleStrip = generateDoubleLine(initline, 0.05);
-            var gl = getContextgl1();
-            drawlines(gl, triangleStrip, true, true);
-        }
-
-        //境界线
-        function borderStrip() {
-            //初始化界线
-            var points = getBorder(border);
-            getArea(points);
-            let triangleStrip = generateBorderStrip(points, 0.15);
-            var gl = getContextgl4();
-
-            // drawBorderArea(triangleStrip, false, true); //带区域面
-            drawBorder(gl, triangleStrip, false, true); //不带区域面
-        }
-
-        //二叉树渐变河流网
-        // let stroke_array = getMapStructure(originData, false); //同时生成boundary
-        // let stroke_array1 = getMapStructure(originData, false);
-        let stroke_array = getMapStructure(forest3, false); //同时生成boundary
-        // let stroke_array = getMapStructure(tree1, false); //同时生成boundary
-        // let OBJ;
-
-        function display_forest() {
-            // clearBoundary();
-            //森林
-            // let stroke_array2 = getMapStructure(forest1_Project, false);//同时生成boundary
-            // let stroke_array2 = getMapStructure(originData, false); //同时生成boundary
-
-            let forest = new Forest();
-            forest.newForest(stroke_array);
-            forest.DrawForest();
-            // clearBoundary()
-        }
-
-        //河流网的冲突检测，树
-        function riverNet() {
-            var gl = getContextgl5();
-            get_Whole_arr(stroke_array, 0.001, gl);
-            clearBoundary();
-        }
-
-        //单线看效果
-        function draw_oneLine() {
-            clearBoundary();
-            let stroke_array2 = getMapStructure(oneline4, false);
-            // let stroke_array2 = getMapStructure(road, false);
-            var gl = getContextgl3();
-            draw_detect(gl, stroke_array2[0].points, 0.0045);
-            clearBoundary();
-        }
-
-        //单线移位
-        function draw_oneline1() {
-
-            clearBoundary()
-            let stroke_array2 = getMapStructure(oneline4, false);
-
-            var gl = getContextgl6();
-            detect_displacement_draw(gl, stroke_array2[0].points, 0.6, 0.0045)
-            clearBoundary();
-        }
+  <script src="./js/draw.js"></script>
+  <script src="./js/PointInTri.js"></script>
+  <script src="./js/symbol.js"></script>
+  <script src="./js/boundaryLine.js"></script>
+  <script src="./js/smoothLine.js"></script>
+  <script src="./js/drawLine.js"></script>
+  <script src="./js/index.js"></script>
+  <script src="./js/bridge.js"></script>
+  <script src="./js/displacement.js"></script>
+  <script src="./js/contour.js"></script>
 
 
-        //等高线
-        function draw_contour() {
-            clearBoundary()
-            let stroke_array3 = getMapStructure(contour4, false); //同时生成boundary
-            var gl = getContextgl7();
-            get_Whole_arr(stroke_array3, 50, gl);
-            clearBoundary()
-        }
+  <script>
+    // var pts = initLine(5);
+    //初始化非封闭线段
+    function initcentralLine(m, n) {
+      const a = 0.05;
+      var vectors = [];
+      for (var i = 0; i < 20; i++) {
+        let point = new Point(m, n);
+        vectors.push(point);
+        m = m + a;
+        n = n + a;
+      }
+      return vectors;
+    }
+
+    // 双线
+    function doubleLine() {
+      // 初始化中心线坐标
+      let initline = initcentralLine(-0.2, -0.2);
+      // let initline = initclosedLine(-0.2, -0.2);
+      let triangleStrip = generateDoubleLine(initline, 0.05);
+      var gl = getContextgl2();
+      drawlines(gl, triangleStrip, false, false);
+    }
+
+    // 三线
+    function threeLine() {
+      // 初始化中心线坐标
+      let initline = initcentralLine(-0.2, -0.2);
+      let triangleStrip = generateDoubleLine(initline, 0.05);
+      var gl = getContextgl1();
+      drawlines(gl, triangleStrip, true, true);
+    }
+
+    //境界线
+    function borderStrip() {
+      //初始化界线
+      var points = getBorder(border);
+      getArea(points);
+      let triangleStrip = generateBorderStrip(points, 0.15);
+      var gl = getContextgl4();
+
+      // drawBorderArea(triangleStrip, false, true); //带区域面
+      drawBorder(gl, triangleStrip, false, true); //不带区域面
+    }
+
+    //二叉树渐变河流网
+    let stroke_array = getMapStructure(originData, false); //同时生成boundary
+    // let stroke_array1 = getMapStructure(originData, false);
+    // let stroke_array = getMapStructure(forest3, false); //同时生成boundary
+    // let stroke_array = getMapStructure(tree1, false); //同时生成boundary
+    // let OBJ;
+
+    function display_forest() {
+      // clearBoundary();
+      //森林
+      // let stroke_array2 = getMapStructure(forest1_Project, false);//同时生成boundary
+      // let stroke_array2 = getMapStructure(originData, false); //同时生成boundary
+
+      let forest = new Forest();
+      forest.newForest(stroke_array);
+      forest.DrawForest();
+      // clearBoundary()
+    }
+
+    //河流网的冲突检测，树
+    function riverNet() {
+      var gl = getContextgl5();
+      get_Whole_arr(stroke_array, 0.001, gl);
+      clearBoundary();
+    }
+
+    //单线看效果
+    function draw_oneLine() {
+      clearBoundary();
+      let stroke_array2 = getMapStructure(oneline4, false);
+      // let stroke_array2 = getMapStructure(road, false);
+      var gl = getContextgl3();
+      draw_detect(gl, stroke_array2[0].points, 0.0045);
+      clearBoundary();
+    }
+
+    //单线移位
+    function draw_oneline1() {
+
+      clearBoundary()
+      let stroke_array2 = getMapStructure(oneline4, false);
+
+      var gl = getContextgl6();
+      detect_displacement_draw(gl, stroke_array2[0].points, 0.6, 0.0045)
+      clearBoundary();
+    }
+
+
+    //等高线
+    function draw_contour() {
+      clearBoundary()
+      let stroke_array3 = getMapStructure(contour4, false); //同时生成boundary
+      var gl = getContextgl7();
+      get_Whole_arr(stroke_array3, 50, gl);
+      clearBoundary()
+    }
 
 
 
-        //河流网
-        // display_forest(); //渐变河网
-        // riverNet(); //未渐变
+    //河流网
+    display_forest(); //渐变河网
+    // riverNet(); //未渐变
 
-        // borderStrip();//境界线
-        // doubleLine();//双线道路
-        // threeLine();//三线道路
-        // draw_oneLine(); //单线效果
+    // borderStrip();//境界线
+    // doubleLine();//双线道路
+    // threeLine();//三线道路
+    // draw_oneLine(); //单线效果
 
-        // draw_oneline1()
+    // draw_oneline1()
 
-        // draw_contour()
-        //着色器计算连续插值
-        // init();
-    </script>
+    // draw_contour()
+    //着色器计算连续插值
+
+    draw_contours(contour4, 35)//绘制等高线并绘，会改变boundary的值
+
+    // init();
+  </script>
 </body>
 
 </html>
