@@ -144,8 +144,8 @@ function draw_contours(data, width) {
   var strokeArr = getMapStructure(data)
   clearBoundary() //免得影响其他的地图边界
 
-  // for (var i = 0; i < strokeArr.length - 2; i = i + 2) {
-  for (var i = 0; i < 2; i = i + 2) {
+  for (var i = 0; i < strokeArr.length - 2; i = i + 2) {
+    // for (var i = 0; i < 2; i = i + 2) {
     let obj = dealData(
       strokeArr[i].points,
       strokeArr[i + 1].points,
