@@ -217,7 +217,7 @@ function draw_bridge(gl, obj) {
     var riverBuffer = createBuffer(gl, new Float32Array(centralLine[i]))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     n = centralLine[i].length / 2
-    gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制中心线
+    // gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制中心线
   }
 
   // 绘制变色重叠三角形

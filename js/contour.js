@@ -126,6 +126,8 @@ var trianglesOBJ = {
   originStrip: [],
   overlapTris: [],
 }
+
+//道路
 var bound1 = {
   maxX: 1966025.7751349723,
   minX: 1970199.9179820986,
@@ -133,26 +135,48 @@ var bound1 = {
   minY: 5590884.356847918,
 }
 
-var bound2 = {
+var bound0 = {
   maxX: 669782.3360009035,
   minX: 667873.0502833448,
   maxY: 3251833.665194649,
   minY: 3249215.8242938635,
 }
+var bound2 = {
+  maxX: 687404,
+  minX: 685733,
+  maxY: 3234320,
+  minY: 3232993,
+}
+var bound3 = {
+  maxX: 682154,
+  minX: 680846,
+  maxY: 3240878,
+  minY: 3239876,
+}
+
+var bound4 = {
+  maxX: 688490,
+  minX: 686965,
+  maxY: 3259194,
+  minY: 3257139,
+}
 //判断重叠位置
 function draw_contours(data, width) {
   var strokeArr = getMapStructure(data)
   clearBoundary() //免得影响其他的地图边界
+  //bound2->bound0
 
-  for (var i = 0; i < strokeArr.length - 2; i = i + 2) {
+  //只能计算偶数个等高线的并绘？？？？？？改
+  for (var i = 0; i < strokeArr.length-1; i = i + 2 ) {
     // for (var i = 0; i < 2; i = i + 2) {
     let obj = dealData(
       strokeArr[i].points,
       strokeArr[i + 1].points,
       width,
-      bound2,
+      bound4,
       true
     ) //计算叠置的三角形
+
     trianglesOBJ.centralLine.push(obj.centralLine[0])
     trianglesOBJ.originStrip.push(obj.originStrip[0])
     trianglesOBJ.overlapTris.push(obj.overlapTris[0])

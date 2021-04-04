@@ -2,13 +2,13 @@
 // 二叉树的节点为每一个河段
 // 河段指的是从河源到汇口之间或者汇口和汇口之间的河流段
 let widLevel = {
-  level1: 0.0015,
-  level2: 0.0016,
-  level3: 0.0015,
-  level4: 0.00095,
-  level5: 0.00088,
+  level1: 0.00065,
+  level2: 0.00065,
+  level3: 0.0004,
+  level4: 0.0002,
+  level5: 0.0001,
 
-  // level1: 0.002,
+  // level1: 0.0024,
   // level2: 0.0018,
   // level3: 0.0016,
   // level4: 0.0015,
@@ -182,29 +182,6 @@ class BinaryTree {
   getnodeNum() {
     return this.nodeNum
   }
-
-  //遍历使无分支河段收尾相接
-  // connectBranch(node) {
-  //   if (node == null) {
-  //     return //递归基
-  //   }
-
-  //   //存在两个孩子
-  //   if (node.left && node.right) {
-  //     this.connectBranch(node.left)
-  //     this.connectBranch(node.right)
-  //   } else if (node.left) {
-  //     node.points = addArrs(node.points, node.left.points)
-  //   } else if (node.right) {
-  //     node.points = addArrs(node.points, node.right.points)
-  //   }
-
-  //   let newNode = new Node()
-  //   newNode = node.parent
-  //   node.endWid = newNode.startWid
-  //   this.draw(node.points, node.endWid, node) //根节点之外的节点插值计算
-  // }
-
   //绘制树
 
   DrawTree() {
@@ -326,6 +303,7 @@ class Forest {
         tree.newTree(rootNode) //得到这棵树
         // tree.newTree(rootNode) //得到这棵树
         this.trees.push(tree)
+        this.treeNum = this.treeNum+1
       }
     }
   }
@@ -336,7 +314,7 @@ class Forest {
   }
 
   GetTree(id) {
-    if (id > 0 && id < this.trees.length) {
+    if (id > 0 && id < this.treeNum) {
       return this.trees[id]
     } else {
       return null
@@ -523,8 +501,13 @@ function insertPts(vectors, width, isGradient) {
   for (let i = 1; i < len - 1; i++) {
     //判断是否需要渐变
     if (isGradient) {
-      linewidth = width - (width * 1) / len //线性渐变
-      // var linewidth = width * (len-1-i)/ len;//线性渐变
+      if(width<0.0005){
+        linewidth = width
+      }
+     else{
+      linewidth = width - (width * 1) / (len+3) //线性渐变
+     } 
+      // linewidth = width * (len-1-i)/ len;//线性渐变
     } else {
       linewidth = width //线性渐变
     }
@@ -665,6 +648,24 @@ function get_Whole_arr(strokes, width, gl) {
   }
 
   for (var i = 0; i < strokes.length; i++) {
+    
+    switch (strokes[i].level) {
+      case 1:
+        width = widLevel.level1
+        break
+      case 2:
+        width = widLevel.level2
+        break
+      case 3:
+        width = widLevel.level3
+        break
+      case 4:
+        width = widLevel.level4
+        break
+      case (5, 6, 7, 8):
+        width = widLevel.level5
+        break
+        }
     calculate(strokes[i].points) //strokes[i]为一个Node
   }
 

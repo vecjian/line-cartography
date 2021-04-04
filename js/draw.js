@@ -217,7 +217,8 @@ function draw_three_objs(
 // 三线、双线
 function drawlines(gl, trianglestrip, debug, central) {
     // let gl = getContextgl1();
-    gl.clearColor(0.95, 0.95, 0.95, 1)
+    // gl.clearColor(0.95, 0.95, 0.95, 1)
+    gl.clearColor(1, 1, 1, 0)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     var program = createProgram(gl, v_Shader, f_Shader)
     gl.useProgram(program.program)
@@ -319,7 +320,7 @@ function draw_debug_riverNet(gl, obj) {
             var riverBuffer = createBuffer(gl, new Float32Array(overlapTris[i]))
             bindAttribute(gl, riverBuffer, program.a_Position, 2)
             n = overlapTris[i].length / 2
-            gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+            // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
         }
     }
 

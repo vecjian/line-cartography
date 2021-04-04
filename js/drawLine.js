@@ -33,7 +33,7 @@ function draw_detect(gl, points, width) {
 
 //绘制三角形串表示的线
 function draw_line_Tris(points, width, isConverted) {
-  let pos = insertPts(points, width)
+  let pos = insertPts(points, width,true)
   var array = convertCor(
     toXYArray(ptsToTriangles(pos.pts1, pos.pts2)),
     boundary

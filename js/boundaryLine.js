@@ -6,14 +6,15 @@ function generateBorderStrip(borderPoints, width) {
     var cors2 = insertPts(borderPoints, 2 * width, false) //较宽的插值,包括左插值pts1,右插值pts2
 
     borderStrips.insideStrip = convertCor1(
-            toXYArray(ptsToTriangles(borderPoints, cors1.pts2))
+            // toXYArray(ptsToTriangles(borderPoints, cors1.pts2))
+            toXYArray(ptsToTriangles(cors1.pts1, cors1.pts2))
         )
-        //左方向
+    //左方向
     borderStrips.outsideStrip = convertCor1(
-        toXYArray(ptsToTriangles(cors1.pts2, cors2.pts2))
+        toXYArray(ptsToTriangles(cors2.pts2, cors2.pts1))
     )
     borderStrips.centralLine = convertCor1(toXYArray(borderPoints))
-        // 索引值
+    // 索引值
     borderStrips.indexArr = getTriangles(borderPoints)
     return borderStrips
 }
@@ -171,7 +172,8 @@ function drawBorderArea(trianglestrip, debug, central) {
 // 境界线
 function drawBorder(gl, trianglestrip, debug, central) {
     // let gl = getContextgl3()
-    gl.clearColor(0.95, 0.95, 0.95, 1)
+    // gl.clearColor(0.95, 0.95, 0.95, 1)
+    gl.clearColor(1, 1, 1, 1)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     var program = createProgram(gl, v_Shader, f_Shader)
     gl.useProgram(program.program)
