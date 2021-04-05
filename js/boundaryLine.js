@@ -3,7 +3,7 @@
 function generateBorderStrip(borderPoints, width) {
   var borderStrips = {} //两层色带
   var cors1 = insertPts(borderPoints, width, false) //较窄的插值,包括左插值pts1,右插值pts2
-  var cors2 = insertPts(borderPoints, 2 * width, false) //较宽的插值,包括左插值pts1,右插值pts2
+  var cors2 = insertPts(borderPoints, 1.3 * width, false) //较宽的插值,包括左插值pts1,右插值pts2
 
   borderStrips.insideStrip = convertCor1(
     // toXYArray(ptsToTriangles(borderPoints, cors1.pts2))
@@ -82,18 +82,18 @@ function getArea(vectorCors) {
 }
 
 //坐标转换
-// function convertCor1(xyArr) {
-//     let arr = []
-//     for (var i = 0; i < xyArr.length; i = i + 2) {
-//         let x = ((2 * (xyArr[i] - rect.minX)) / (rect.maxX - rect.minX) - 1) * 0.8
-//         arr.push(x)
-//             // console.log(xyArr[i + 1])
-//         let y =
-//             ((2 * (xyArr[i + 1] - rect.minY)) / (rect.maxY - rect.minY) - 1) * 0.8
-//         arr.push(y)
-//     }
-//     return arr
-// }
+function convertCor1(xyArr) {
+  let arr = []
+  for (var i = 0; i < xyArr.length; i = i + 2) {
+    let x = ((2 * (xyArr[i] - rect.minX)) / (rect.maxX - rect.minX) - 1) * 0.8
+    arr.push(x)
+    // console.log(xyArr[i + 1])
+    let y =
+      ((2 * (xyArr[i + 1] - rect.minY)) / (rect.maxY - rect.minY) - 1) * 0.8
+    arr.push(y)
+  }
+  return arr
+}
 
 //三角形三角化
 function getTriangles(pts) {
@@ -184,33 +184,38 @@ function drawBorder(gl, trianglestrip, debug, central) {
   //设置缩放参数
   gl.uniform1f(program.u_Scale, 1.0)
 
-  gl.uniform4fv(program.u_color, [0.7, 0.7, 0.7, 1.0])
+  // 绘制中心线
+  // gl.uniform4fv(program.u_color, [0.7, 0.7, 0.7, 1.0])
+  gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 1.0])
   riverBuffer = createBuffer(gl, new Float32Array(outsideStrip))
   bindAttribute(gl, riverBuffer, program.a_Position, 2)
   n = outsideStrip.length / 2
   gl.drawArrays(gl.TRIANGLES, 0, n)
+
   if (debug) {
     gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0])
-    gl.drawArrays(gl.LINE_STRIP, 0, n)
+    // gl.drawArrays(gl.LINE_STRIP, 0, n)
   }
 
-  gl.uniform4fv(program.u_color, [0.5, 0.5, 0.5, 1.0])
+  // gl.uniform4fv(program.u_color, [0.5, 0.5, 0.5, 1.0])
+  gl.uniform4fv(program.u_color, [1.0, 0.0, 0.0, 1.0])
   var riverBuffer = createBuffer(gl, new Float32Array(insideStrip))
   bindAttribute(gl, riverBuffer, program.a_Position, 2)
   n = insideStrip.length / 2
   gl.drawArrays(gl.TRIANGLES, 0, n)
+
   if (debug) {
     gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0])
-    gl.drawArrays(gl.LINE_STRIP, 0, n)
+    // gl.drawArrays(gl.LINE_STRIP, 0, n)
   }
 
   if (central) {
-    // 绘制中心线
+    //绘制原始剖分线
     gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 1.0])
     riverBuffer = createBuffer(gl, new Float32Array(trianglestrip.centralLine))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     n = trianglestrip.centralLine.length / 2
-    gl.drawArrays(gl.LINE_STRIP, 0, n)
+    // gl.drawArrays(gl.LINE_STRIP, 0, n)
     // gl.drawArrays(gl.TRIANGLE_FAN, 0, n);
   }
 }

@@ -203,12 +203,12 @@ function draw_bridge(gl, obj) {
   gl.uniform1f(program.u_Scale, 1.0)
 
   //绘制原始剖分三角形
-  gl.uniform4fv(program.u_color, [0.0, 0.2, 1.0, 0.7])
+  gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 1])
   for (let i = 0; i < originStrip.length; i++) {
     var riverBuffer = createBuffer(gl, new Float32Array(originStrip[i]))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     var n = originStrip[i].length / 2
-    gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+    // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
   }
 
   //绘制中心线
@@ -217,7 +217,7 @@ function draw_bridge(gl, obj) {
     var riverBuffer = createBuffer(gl, new Float32Array(centralLine[i]))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     n = centralLine[i].length / 2
-    // gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制中心线
+    gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制中心线
   }
 
   // 绘制变色重叠三角形

@@ -167,15 +167,15 @@ function draw_contours(data, width) {
   //bound2->bound0
 
   //只能计算偶数个等高线的并绘？？？？？？改
-  for (var i = 0; i < strokeArr.length-1; i = i + 2 ) {
+  for (var i = 0; i < strokeArr.length - 1; i = i + 2) {
     // for (var i = 0; i < 2; i = i + 2) {
     let obj = dealData(
       strokeArr[i].points,
       strokeArr[i + 1].points,
       width,
-      bound4,
+      bound3,
       true
-    ) //计算叠置的三角形
+    ) //计算叠置的三角形,同步更改bound，记住！！！！！！！
 
     trianglesOBJ.centralLine.push(obj.centralLine[0])
     trianglesOBJ.originStrip.push(obj.originStrip[0])

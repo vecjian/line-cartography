@@ -22,25 +22,37 @@ const F_shader = `
         float dis = getDis(x, y);
         float percent = 0.0;
         
-        if(dis > u_halfHeight){
-          gl_FragColor = vec4(0.85, 0.85, 0.85, 1.0);
-        } else{
-          gl_FragColor = vec4(0.9, 0.9, 0.9, 1.0);
+        //跨区域色带
+        // if( dis <1.05*u_halfHeight && dis>0.95*u_halfHeight){
+        //   gl_FragColor =vec4(0.0,0.0,0.0,1.0) ;
+        // } else if(dis>0.5*u_halfHeight&&dis< 1.5*u_halfHeight){
+        //   gl_FragColor = vec4(0.6, 0.6, 0.6, 1.0);
+        // }else{
+        //   gl_FragColor =   vec4(0.75, 0.75, 0.75, 1.0);
+        // }
+
+        //三线道路
+        if( dis <1.05*u_halfHeight && dis>0.95*u_halfHeight){
+          gl_FragColor =vec4(0.0,0.0,0.0,1.0) ;
+        } else if(dis>0.25*u_halfHeight&&dis< 1.75*u_halfHeight){
+          gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        }else{
+          gl_FragColor =   vec4(0.0, 0.0, 0.0, 1.0);
         }
     
-        /*
-        if(dis > 0.0&&dis<0.3*u_halfHeight*2.0){
-          gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-            // percent = (2.0 * u_halfHeight - dis) / u_halfHeight;
-            // percent = 0.7;
-        }else if(dis>0.3*u_halfHeight*2.0&&dis<0.7*u_halfHeight*2.0){
-          gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-
-            // percent = dis / u_halfHeight;
-            // percent = 1.0;
-        }else{
-          gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
-        }
+        
+        // if(dis > 0.55*u_halfHeight*2.0 && dis<0.85*u_halfHeight*2.0 ){
+        //   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        //     // percent = (2.0 * u_halfHeight - dis) / u_halfHeight;
+        //     // percent = 0.7;  
+        // }else if(dis>0.1*u_halfHeight*2.0 && dis<0.45*u_halfHeight*2.0){
+        //   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        // }else if(dis>0.5*u_halfHeight*2.0 && 0.55*dis<u_halfHeight*2.0){
+        //   // gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        // }else{
+        //   gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+        // }
+        // percent = dis / u_halfHeight;
         // gl_FragColor = vec4(0.5, 0.5, 0.5, percent);
         // gl_FragColor = vec4(0.0, 0.0, 0.0,1.0);*/
     }

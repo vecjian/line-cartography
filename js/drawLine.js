@@ -33,7 +33,7 @@ function draw_detect(gl, points, width) {
 
 //绘制三角形串表示的线
 function draw_line_Tris(points, width, isConverted) {
-  let pos = insertPts(points, width,true)
+  let pos = insertPts(points, width, true)
   var array = convertCor(
     toXYArray(ptsToTriangles(pos.pts1, pos.pts2)),
     boundary
@@ -174,8 +174,8 @@ function convertCor(xyArr, bound) {
   let scale = Math.max(bound.maxX - bound.minX, bound.maxY - bound.minY)
 
   for (var i = 0; i < xyArr.length; i = i + 2) {
-    let x = (2 * (xyArr[i] - bound.minX)) / scale - 1
-    let y = (2 * (xyArr[i + 1] - bound.minY)) / scale - 1
+    let x = ((2 * (xyArr[i] - bound.minX)) / scale - 1) * 0.95
+    let y = ((2 * (xyArr[i + 1] - bound.minY)) / scale - 1) * 0.95
     arr.push(x, y)
   }
   return arr

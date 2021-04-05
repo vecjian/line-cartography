@@ -16,7 +16,7 @@
   <canvas id="paint0" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint3" width="400" height="300" style="height: auto; width: auto"></canvas>
   <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint6" width="400" height="400" style="height: auto; width: auto"></canvas>
@@ -58,6 +58,8 @@
   <script src="./data/oneline4.js"></script>
   <script src="./data/oneline5.js"></script>
   <script src="./data/oneline1.js"></script>
+  <script src="./data/oneRoad.js"></script>
+
 
   <script src="./js/BinaryTree.js"></script>
 
@@ -111,10 +113,12 @@
     //境界线
     function borderStrip() {
       //初始化界线
-      var points = getBorder(border);
+      // var points = getBorder(border);
+      var points = getBorder(oneRoad);
       getArea(points);
       // points = douglasPeucker(points,0.0006)
-      let triangleStrip = generateBorderStrip(points, 0.15);
+      // let triangleStrip = generateBorderStrip(points, 0.15);
+      let triangleStrip = generateBorderStrip(points, 0.007);
       var gl = getContextgl4();
 
       // drawBorderArea(triangleStrip, false, true); //带区域面
@@ -122,9 +126,9 @@
     }
 
     //二叉树渐变河流网
-    // let stroke_array = getMapStructure(originData, false); //同时生成boundary
+    let stroke_array = getMapStructure(originData, false); //同时生成boundary
     // let stroke_array = getMapStructure(forest2, false); //同时生成boundary//森林中不能含有人工的河道，必须是天然的河流
-    let stroke_array = getMapStructure(tree8, false); //同时生成boundary
+    // let stroke_array = getMapStructure(tree8, false); //同时生成boundary
 
     function display_forest() {
       // clearBoundary();
@@ -145,10 +149,10 @@
     //单线看效果
     function draw_oneLine() {
       clearBoundary();
-      let stroke_array2 = getMapStructure(oneline4, false);
+      let stroke_array2 = getMapStructure(oneRoad, false);
       // let stroke_array2 = getMapStructure(road, false);
       var gl = getContextgl3();
-      draw_detect(gl, stroke_array2[0].points, 0.0045);
+      draw_detect(gl, stroke_array2[0].points, 0.008);
       clearBoundary();
     }
 
@@ -176,22 +180,22 @@
 
 
     //河流网
-    // display_forest(); //渐变河网
+    display_forest(); //渐变河网
     // riverNet(); //未渐变
 
-    // borderStrip();//境界线
+    borderStrip();//境界线
     // doubleLine();//双线道路
     // threeLine();//三线道路
-    // draw_oneLine(); //单线效果
+    draw_oneLine(); //单线效果
 
     // draw_oneline1()
 
     // draw_contour()
     //着色器计算连续插值
 
-    // draw_contours(contour4, 25 )//绘制等高线并绘，会改变boundary的值
+    draw_contours(contour3, 25 )//绘制等高线并绘，会改变boundary的值
 
-    init();
+    // init();
   </script>
 </body>
 

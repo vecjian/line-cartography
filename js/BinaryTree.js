@@ -2,7 +2,7 @@
 // 二叉树的节点为每一个河段
 // 河段指的是从河源到汇口之间或者汇口和汇口之间的河流段
 let widLevel = {
-  level1: 0.00065,
+  level1: 0.001,
   level2: 0.00065,
   level3: 0.0004,
   level4: 0.0002,
@@ -263,7 +263,7 @@ class BinaryTree {
     wholeArr.debugTriNet.push(obj.debugTriNet)
     wholeArr.newTriStrip.push(obj.newTriStrip)
 
-    //把每一个计算结果放在wholeArr进行保存，每一段都单独绘制，最后将回执结果呈现在屏幕上
+    //把每一个计算结果放在wholeArr进行保存，每一段都单独绘制，最后将绘制结果呈现在屏幕上
     //不能在这里绘制
     // draw_debug_riverNet(wholeArr)
   }
@@ -303,7 +303,7 @@ class Forest {
         tree.newTree(rootNode) //得到这棵树
         // tree.newTree(rootNode) //得到这棵树
         this.trees.push(tree)
-        this.treeNum = this.treeNum+1
+        this.treeNum = this.treeNum + 1
       }
     }
   }
@@ -423,8 +423,8 @@ function transform1(points, bound) {
     let y = points[i].y
     //转换到（-1,1）之间
     let scale = Math.max(bound.maxX - bound.minX, bound.maxY - bound.minY)
-    x = (2 * (x - bound.minX)) / scale - 1
-    y = (2 * (y - bound.minY)) / scale - 1
+    x = ((2 * (x - bound.minX)) / scale - 1) * 0.95
+    y = ((2 * (y - bound.minY)) / scale - 1) * 0.95
 
     // x = ((2 * (x - boundary.minX)) / (boundary.maxX - boundary.minX) - 1) * 0.95
     // y = ((2 * (y - boundary.minY)) / (boundary.maxY - boundary.minY) - 1) * 0.95
@@ -501,12 +501,11 @@ function insertPts(vectors, width, isGradient) {
   for (let i = 1; i < len - 1; i++) {
     //判断是否需要渐变
     if (isGradient) {
-      if(width<0.0005){
+      if (width < 0.0005) {
         linewidth = width
+      } else {
+        linewidth = width - (width * 1) / (len + 3) //线性渐变
       }
-     else{
-      linewidth = width - (width * 1) / (len+3) //线性渐变
-     } 
       // linewidth = width * (len-1-i)/ len;//线性渐变
     } else {
       linewidth = width //线性渐变
@@ -648,7 +647,6 @@ function get_Whole_arr(strokes, width, gl) {
   }
 
   for (var i = 0; i < strokes.length; i++) {
-    
     switch (strokes[i].level) {
       case 1:
         width = widLevel.level1
@@ -665,7 +663,7 @@ function get_Whole_arr(strokes, width, gl) {
       case (5, 6, 7, 8):
         width = widLevel.level5
         break
-        }
+    }
     calculate(strokes[i].points) //strokes[i]为一个Node
   }
 
