@@ -160,6 +160,13 @@ var bound4 = {
   maxY: 3259194,
   minY: 3257139,
 }
+
+var bound_road = {
+  maxX: 110.5204,
+  minX: 110.4636,
+  maxY: 29.1147,
+  minY: 29.05,
+}
 //判断重叠位置
 function draw_contours(data, width) {
   var strokeArr = getMapStructure(data)
@@ -173,7 +180,7 @@ function draw_contours(data, width) {
       strokeArr[i].points,
       strokeArr[i + 1].points,
       width,
-      bound3,
+      bound2,
       true
     ) //计算叠置的三角形,同步更改bound，记住！！！！！！！
 

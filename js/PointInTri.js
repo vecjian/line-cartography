@@ -305,7 +305,7 @@ function Trianglesoverlap(Tri1, Tri2) {
   if (flag1 || flag2) {
     flag = true
   } else {
-    // console.log("三角形无重叠")
+    // console.log('三角形无重叠')
     flag = false
   }
   return flag

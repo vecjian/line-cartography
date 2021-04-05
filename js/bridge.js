@@ -5,7 +5,7 @@
 //2生成最外层桥梁条带
 //3贴图???
 
-// get_twoLineConflict(twoRoad, 0.0015)
+get_twoLineConflict(twoRoad, 0.0015)
 //数据获取和准备
 function getData(data) {
   let features0 = data.features[0]
@@ -44,7 +44,7 @@ function get_twoLineConflict(roads, width) {
     minY: 29.05,
   }
   var OBJ = dealData(obj.vec0, obj.vec1, width, bound) //计算叠置的三角形
-  var gl = getContextgl6()
+  var gl = getContextgl7()
   draw_bridge(gl, OBJ)
   // return trianglesOBJ
 }
@@ -195,7 +195,8 @@ function draw_bridge(gl, obj) {
   // let debugTriNet = obj.debugTriNet
 
   // var gl = getContextgl5()
-  gl.clearColor(0.95, 0.95, 0.95, 1)
+  // gl.clearColor(0.95, 0.95, 0.95, 1)
+  gl.clearColor(1, 1, 1, 1)
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
   var program = createProgram(gl, v_Shader, f_Shader)
   gl.useProgram(program.program)
@@ -208,7 +209,7 @@ function draw_bridge(gl, obj) {
     var riverBuffer = createBuffer(gl, new Float32Array(originStrip[i]))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     var n = originStrip[i].length / 2
-    // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+    gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
   }
 
   //绘制中心线
@@ -217,7 +218,7 @@ function draw_bridge(gl, obj) {
     var riverBuffer = createBuffer(gl, new Float32Array(centralLine[i]))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     n = centralLine[i].length / 2
-    gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制中心线
+    // gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制中心线
   }
 
   // 绘制变色重叠三角形
@@ -227,7 +228,7 @@ function draw_bridge(gl, obj) {
       var riverBuffer = createBuffer(gl, new Float32Array(overlapTris[i]))
       bindAttribute(gl, riverBuffer, program.a_Position, 2)
       n = overlapTris[i].length / 2
-      // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+      gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
     }
   }
   /*

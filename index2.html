@@ -16,7 +16,7 @@
   <canvas id="paint0" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint3" width="400" height="300" style="height: auto; width: auto"></canvas>
+  <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint6" width="400" height="400" style="height: auto; width: auto"></canvas>
@@ -58,7 +58,13 @@
   <script src="./data/oneline4.js"></script>
   <script src="./data/oneline5.js"></script>
   <script src="./data/oneline1.js"></script>
+  <script src="./data/oneline3.js"></script>
+  <script src="./data/oneline2.js"></script>
   <script src="./data/oneRoad.js"></script>
+  <script src="./data/oneRiver.js"></script>
+  <script src="./data/oneRiver1.js"></script>
+  <script src="./data/oneRiver2.js"></script>
+  <script src="./data/oneRiver3.js"></script>
 
 
   <script src="./js/BinaryTree.js"></script>
@@ -149,10 +155,11 @@
     //单线看效果
     function draw_oneLine() {
       clearBoundary();
-      let stroke_array2 = getMapStructure(oneRoad, false);
+      let stroke_array2 = getMapStructure(oneRiver3, false);
       // let stroke_array2 = getMapStructure(road, false);
       var gl = getContextgl3();
-      draw_detect(gl, stroke_array2[0].points, 0.008);
+      draw_detect(gl, stroke_array2[0].points, 0.0008);
+      // draw_detect(gl, stroke_array2[0].points, 0.005);
       clearBoundary();
     }
 
@@ -160,10 +167,11 @@
     function draw_oneline1() {
 
       clearBoundary()
-      let stroke_array2 = getMapStructure(oneline4, false);
+      let stroke_array2 = getMapStructure(oneRiver3, false);
 
       var gl = getContextgl6();
-      detect_displacement_draw(gl, stroke_array2[0].points, 0.6, 0.0045)
+      detect_displacement_draw(gl, stroke_array2[0].points, 0.6, 0.00055)
+      // detect_displacement_draw(gl, stroke_array2[0].points, 0.3, 0.005)
       clearBoundary();
     }
 
@@ -180,20 +188,21 @@
 
 
     //河流网
-    display_forest(); //渐变河网
+    // display_forest(); //渐变河网
     // riverNet(); //未渐变
 
-    borderStrip();//境界线
+    // borderStrip();//境界线
     // doubleLine();//双线道路
     // threeLine();//三线道路
     draw_oneLine(); //单线效果
 
-    // draw_oneline1()
+    draw_oneline1()
 
     // draw_contour()
     //着色器计算连续插值
 
-    draw_contours(contour3, 25 )//绘制等高线并绘，会改变boundary的值
+    // draw_contours(contour2, 25 )//绘制等高线并绘，会改变boundary的值
+    // draw_contours(twoRoad, 0.005 )//绘制等高线并绘，会改变boundary的值
 
     // init();
   </script>

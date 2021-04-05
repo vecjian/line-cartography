@@ -3,13 +3,15 @@
 // 2.绘制三角网
 // 3.绘制变色后的三角形
 // 4.面状的色带缓冲区
-
+var colorfulTris = []
 // 绘制，检测，重绘,para:points:Point类
 function draw_detect(gl, points, width) {
   //计算了很多遍插值
   let centralLine = toXYArray(transform1(points, boundary)) //坐标转换
 
   let originStrip = draw_line_Tris(points, width) //原始剖分三角形坐标
+  //获取部分三角形 colorfulTris
+  // colorfulTris = draw_line_Tris(points.slice(100, 108), width)
 
   let obj = draw_Triobjs(points, width) // 重叠三角形坐标
   let overlapTris = obj.array
@@ -86,19 +88,21 @@ function get_Overlap_Tris(triangles, points) {
   var newPts = points.slice(0) //添加id
   for (var i = 0; i < len; i++) {
     //triangles[j]不与前面的三角形发生重叠
-    for (var j = i + 1; j < len && !triangles[j].tag; j++) {
-      // 判断两个三角形的位置关系
-      flag = Trianglesoverlap(triangles[i], triangles[j])
-      // flag=true,有位置重叠
-      if (flag) {
-        console.log('有冲突')
-        triangles[i].tag = true
-        triangles[j].tag = true
+    for (var j = i + 1; j < len; j++) {
+      if (!triangles[j].tag) {
+        // 判断两个三角形的位置关系
+        flag = Trianglesoverlap(triangles[i], triangles[j])
+        // flag=true,有位置重叠
+        if (flag) {
+          console.log('有冲突')
+          triangles[i].tag = true
+          triangles[j].tag = true
 
-        // 保存两个重叠的三角形
-        overlap_Tris.push(triangles[i])
-        overlap_Tris.push(triangles[j])
-        newPts = deletePts(newPts, triangles[i].id, triangles[j].id) //每次都从原数组进行删除，不对……
+          // 保存两个重叠的三角形
+          overlap_Tris.push(triangles[i])
+          overlap_Tris.push(triangles[j])
+          newPts = deletePts(newPts, triangles[i].id, triangles[j].id) //每次都从原数组进行删除，不对……
+        }
       }
     }
   }
