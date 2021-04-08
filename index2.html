@@ -13,14 +13,14 @@
 </head>
 
 <body>
-  <canvas id="paint0" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <!-- <canvas id="paint0" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas> -->
   <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <!-- <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas> -->
+  <!-- <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas> -->
   <canvas id="paint6" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint7" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <!-- <canvas id="paint7" width="400" height="400" style="height: auto; width: auto"></canvas> -->
 
   <!-- <script src="./js/."></script> -->
   <script src="./lib/earcut.dev.js"></script>
@@ -58,6 +58,7 @@
   <script src="./data/oneline4.js"></script>
   <script src="./data/oneline5.js"></script>
   <script src="./data/oneline1.js"></script>
+  <script src="./data/oneline.js"></script>
   <script src="./data/oneline3.js"></script>
   <script src="./data/oneline2.js"></script>
   <script src="./data/oneRoad.js"></script>
@@ -65,6 +66,7 @@
   <script src="./data/oneRiver1.js"></script>
   <script src="./data/oneRiver2.js"></script>
   <script src="./data/oneRiver3.js"></script>
+  <script src="./data/oneRiver3_1.js"></script>
 
 
   <script src="./js/BinaryTree.js"></script>
@@ -132,8 +134,8 @@
     }
 
     //二叉树渐变河流网
-    let stroke_array = getMapStructure(originData, false); //同时生成boundary
-    // let stroke_array = getMapStructure(forest2, false); //同时生成boundary//森林中不能含有人工的河道，必须是天然的河流
+    // let stroke_array = getMapStructure(originData, false); //同时生成boundary
+    let stroke_array = getMapStructure(forest2, false); //同时生成boundary//森林中不能含有人工的河道，必须是天然的河流
     // let stroke_array = getMapStructure(tree8, false); //同时生成boundary
 
     function display_forest() {
@@ -155,11 +157,11 @@
     //单线看效果
     function draw_oneLine() {
       clearBoundary();
-      let stroke_array2 = getMapStructure(oneRiver3, false);
+      let stroke_array2 = getMapStructure(oneline1, false);
       // let stroke_array2 = getMapStructure(road, false);
       var gl = getContextgl3();
-      draw_detect(gl, stroke_array2[0].points, 0.0008);
-      // draw_detect(gl, stroke_array2[0].points, 0.005);
+      // draw_detect(gl, stroke_array2[0].points, 0.0010);
+      draw_detect(gl, stroke_array2[0]. points, 0.005);
       clearBoundary();
     }
 
@@ -167,11 +169,11 @@
     function draw_oneline1() {
 
       clearBoundary()
-      let stroke_array2 = getMapStructure(oneRiver3, false);
+      let stroke_array2 = getMapStructure(oneline1, false);
 
       var gl = getContextgl6();
-      detect_displacement_draw(gl, stroke_array2[0].points, 0.6, 0.00055)
-      // detect_displacement_draw(gl, stroke_array2[0].points, 0.3, 0.005)
+      // detect_displacement_draw(gl, stroke_array2[0].points, 0.6, 0.00055)
+      detect_displacement_draw(gl, stroke_array2[0].points, 0.2, 0.005)
       clearBoundary();
     }
 
