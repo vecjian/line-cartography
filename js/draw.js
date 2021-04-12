@@ -250,7 +250,7 @@ function drawlines(gl, trianglestrip, debug, central) {
   //三角网
   if (debug) {
     gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0])
-    // gl.drawArrays(gl.LINE_STRIP, 0, n)
+    gl.drawArrays(gl.LINE_STRIP, 0, n)
   }
 
   gl.uniform4fv(program.u_color, [0.0, 0.0, 0.0, 1.0])
@@ -261,7 +261,7 @@ function drawlines(gl, trianglestrip, debug, central) {
 
   if (debug) {
     gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0])
-    // gl.drawArrays(gl.LINE_STRIP, 0, n)
+    gl.drawArrays(gl.LINE_STRIP, 0, n)
   }
 
   // 绘制中心线背景;
@@ -273,7 +273,7 @@ function drawlines(gl, trianglestrip, debug, central) {
 
   if (debug) {
     gl.uniform4fv(program.u_color, [0.0, 1.0, 0.0, 1.0])
-    // gl.drawArrays(gl.LINE_STRIP, 0, n)
+    gl.drawArrays(gl.LINE_STRIP, 0, n)
   }
 
   //绘制三线
@@ -298,7 +298,8 @@ function draw_debug_riverNet(gl, obj) {
   let newTriStrip = obj.newTriStrip
 
   // var gl = getContextgl()
-  gl.clearColor(0.95, 0.95, 0.95, 1)
+  // gl.clearColor(0.95, 0.95, 0.95, 1)
+  gl.clearColor(1, 1, 1, 1)
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
   var program = createProgram(gl, v_Shader, f_Shader)
   gl.useProgram(program.program)
@@ -331,7 +332,7 @@ function draw_debug_riverNet(gl, obj) {
       var riverBuffer = createBuffer(gl, new Float32Array(overlapTris[i]))
       bindAttribute(gl, riverBuffer, program.a_Position, 2)
       n = overlapTris[i].length / 2
-      gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+      // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
     }
   }
 

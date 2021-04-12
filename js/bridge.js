@@ -5,7 +5,7 @@
 //2生成最外层桥梁条带
 //3贴图???
 
-get_twoLineConflict(twoRoad, 0.0015)
+// get_twoLineConflict(twoRoad, 0.0015)
 //数据获取和准备
 function getData(data) {
   let features0 = data.features[0]
@@ -89,8 +89,10 @@ function dealData(road1, road2, width, bound, flag) {
   let idArr1 = overlapTris[2]
   let idArr2 = overlapTris[3]
   let originStrip = []
+  //间断绘制时
   if (flag) {
     // let originStrip1 = convertCor(Tris_to_XYarr(replace(roadStrip1,idArr1)),bound)//先删除一条线段的重叠三角形
+    var temp = getMaxMin(idArr2)
     let originStrip2 = convertCor(
       Tris_to_XYarr(replace(roadStrip2, idArr2)),
       bound
@@ -125,13 +127,6 @@ function convertCor2(xyArr, bound) {
     let x = (2 * (xyArr[i] - bound.minX)) / scale - 1
     let y = (2 * (xyArr[i + 1] - bound.minY)) / scale - 1
     arr.push(x, y)
-    // let x =
-    //     ((2 * (xyArr[i] - bound.minX)) / (bound.maxX - bound.minX) - 1) * 0.95
-    // arr.push(x)
-    //     // console.log(xyArr[i + 1])
-    // let y =
-    //     ((2 * (xyArr[i + 1] - bound.minY)) / (bound.maxY - bound.minY) - 1) * 0.95
-    // arr.push(y)
   }
   return arr
 }
@@ -152,8 +147,17 @@ function overLapTriInDifferentline(triangleStrip1, triangleStrip2) {
         m = m + 1
         if (m == 1) {
           tags1.push(triangleStrip1[i].id) //标记三角形的id
+          // for (var k = 0; k < 5; k++) {
+          //   tags1.push(triangleStrip1[i].id + k) //标记三角形的id
+          //   tags1.push(triangleStrip1[i].id - k) //标记三角形的id
+          // }
         }
         tags2.push(triangleStrip2[j].id)
+        // for (var k = 0; k < 5; k++) {
+        //   tags1.push(triangleStrip2[i].id + k) //标记三角形的id
+        //   tags1.push(triangleStrip2[i].id - k) //标记三角形的id
+        // }
+
         overlap_Tris2.push(triangleStrip2[j])
       }
     }
@@ -194,8 +198,6 @@ function draw_bridge(gl, obj) {
   let overlapTris = obj.overlapTris
   // let debugTriNet = obj.debugTriNet
 
-  // var gl = getContextgl5()
-  // gl.clearColor(0.95, 0.95, 0.95, 1)
   gl.clearColor(1, 1, 1, 1)
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
   var program = createProgram(gl, v_Shader, f_Shader)
@@ -209,7 +211,7 @@ function draw_bridge(gl, obj) {
     var riverBuffer = createBuffer(gl, new Float32Array(originStrip[i]))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     var n = originStrip[i].length / 2
-    gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+    // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
   }
 
   //绘制中心线
@@ -218,7 +220,7 @@ function draw_bridge(gl, obj) {
     var riverBuffer = createBuffer(gl, new Float32Array(centralLine[i]))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     n = centralLine[i].length / 2
-    // gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制中心线
+    gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制中心线
   }
 
   // 绘制变色重叠三角形
@@ -228,7 +230,7 @@ function draw_bridge(gl, obj) {
       var riverBuffer = createBuffer(gl, new Float32Array(overlapTris[i]))
       bindAttribute(gl, riverBuffer, program.a_Position, 2)
       n = overlapTris[i].length / 2
-      gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+      // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
     }
   }
   /*
@@ -245,46 +247,23 @@ function draw_bridge(gl, obj) {
 /*
  *间断绘制发生重叠的路面和等高线
  *
- *
- *
- *
  */
-/*
-//para:(x,y)array
-function dealData(road1, road2, width, bound) {
-  // boundary = bound //给全局变量boundary赋初值
-  // console.log(boundary)
-      //坐标转换(x,y)->Point,同时添加id
-  // 坐标转换至（-1,1）
-  var roadVecs1 = transform2(road1, bound) //坐标值在(-1,1)之间
-  var roadVecs2 = transform2(road2, bound) //坐标值在(-1,1)之间
-  let centralLine1 = toXYArray(roadVecs1)
-  let centralLine2 = toXYArray(roadVecs2)//单线状
-  let centralLine = [centralLine1, centralLine2]//单线状
-
-  //原始剖分三角形
-  let pos1 = insertPts(road1, width)
-  var originStrip1 = convertCor2(
-      toXYArray(ptsToTriangles(pos1.pts1, pos1.pts2)),
-      bound
-  )
-  let pos2 = insertPts(road2, width)
-  var originStrip2 = convertCor2(
-      toXYArray(ptsToTriangles(pos2.pts1, pos2.pts2)),
-      bound
-  )
-  let originStrip = [originStrip1, originStrip2]
-
-  // 0曲线插值，顶点->三角形条带
-  var roadStrip1 = get_Tris(pos1.pts1, pos1.pts2)
-  var roadStrip2 = get_Tris(pos2.pts1, pos2.pts2)
-
-  // 1计算相邻两条等高线之间是否有叠置
-  var overlapTris = overLapTriInDifferentline(roadStrip1, roadStrip2)
-  overlapTris[0] = convertCor(overlapTris[0],bound);
-  overlapTris[1] = convertCor(overlapTris[1],bound);
-  console.log(overlapTris)
-
-  return { centralLine, originStrip, overlapTris }
+function getMaxMin(tags) {
+  var min = tags[0]
+  var max = tags[0]
+  for (let i = 0; i < tags.length; i++) {
+    if (tags[i] < min) {
+      min = tags[i]
+    }
+    if (tags[i] > max) {
+      max = tags[i]
+    }
+  }
+  for (var k = 1; k < 22; k++) {
+    tags.push(max + k)
+    tags.push(min - k)
+  }
+  return tags
 }
-*/
+
+console.log(getMaxMin([1, 10, 2, 5]))

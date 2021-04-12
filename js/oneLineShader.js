@@ -20,13 +20,13 @@ function drawLineWithShader(data) {
   //2 获取境界线边界
   getArea(points)
   //3 转换数据
-  // let bounds = getMultiBounds(points, 0.2)
+  let bounds = getMultiBounds(points, 0.2)
   // let bounds = getMultiBounds(points, 0.1)
-  let bounds = getMultiBounds(points, 0.008)
+  // let bounds = getMultiBounds(points, 0.008)
   //4 将特定结构的数据传入着色器绘制
   multiLine(bounds)
 }
-// drawLineWithShader(boundary4)
+drawLineWithShader(boundary4)
 // drawLineWithShader(generalizationLine)
-drawLineWithShader(oneRoad)
+// drawLineWithShader(oneRoad)
 // drawLineWithShader(border)

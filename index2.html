@@ -13,11 +13,11 @@
 </head>
 
 <body>
-  <!-- <canvas id="paint0" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <!-- <canvas id="paint0" width="400" height="400" style="height: auto; width: auto"></canvas> -->
+  <!-- <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas> -->
-  <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <!-- <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas> -->
+  <!-- <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas> -->
   <!-- <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas> -->
   <canvas id="paint6" width="400" height="400" style="height: auto; width: auto"></canvas>
   <!-- <canvas id="paint7" width="400" height="400" style="height: auto; width: auto"></canvas> -->
@@ -42,6 +42,9 @@
   <script src="./data/contour2.js"></script>
   <script src="./data/contour3.js"></script>
   <script src="./data/contour4.js"></script>
+  <script src="./data/contour8.js"></script>
+  <script src="./data/contour7.js"></script>
+  <script src="./data/contour9.js"></script>
   <!-- <script src="./data/tree_Project.js"></script>
   <script src="./data/tree1_Project.js"></script> -->
   <script src="./data/tree1.js"></script>
@@ -106,7 +109,7 @@
       // let initline = initclosedLine(-0.2, -0.2);
       let triangleStrip = generateDoubleLine(initline, 0.05);
       var gl = getContextgl2();
-      drawlines(gl, triangleStrip, false, false);
+      drawlines(gl, triangleStrip, true, false);
     }
 
     // 三线
@@ -134,9 +137,9 @@
     }
 
     //二叉树渐变河流网
-    // let stroke_array = getMapStructure(originData, false); //同时生成boundary
-    let stroke_array = getMapStructure(forest2, false); //同时生成boundary//森林中不能含有人工的河道，必须是天然的河流
-    // let stroke_array = getMapStructure(tree8, false); //同时生成boundary
+    let stroke_array = getMapStructure(originData, false); //同时生成boundary
+    // let stroke_array = getMapStructure(forest2, false); //同时生成boundary//森林中不能含有人工的河道，必须是天然的河流
+    // let stroke_array = getMapStructure(tree5, false); //同时生成boundary
 
     function display_forest() {
       // clearBoundary();
@@ -150,7 +153,7 @@
     //河流网的冲突检测，树
     function riverNet() {
       var gl = getContextgl5();
-      get_Whole_arr(stroke_array, 0.0007, gl);
+      get_Whole_arr(stroke_array, 0.0008, gl);
       clearBoundary();
     }
 
@@ -196,14 +199,14 @@
     // borderStrip();//境界线
     // doubleLine();//双线道路
     // threeLine();//三线道路
-    draw_oneLine(); //单线效果
+    // draw_oneLine(); //单线效果
 
-    draw_oneline1()
+    // draw_oneline1()
 
     // draw_contour()
     //着色器计算连续插值
 
-    // draw_contours(contour2, 25 )//绘制等高线并绘，会改变boundary的值
+    draw_contours(contour9, 30 )//绘制等高线并绘，会改变boundary的值
     // draw_contours(twoRoad, 0.005 )//绘制等高线并绘，会改变boundary的值
 
     // init();

@@ -2,11 +2,11 @@
 // 二叉树的节点为每一个河段
 // 河段指的是从河源到汇口之间或者汇口和汇口之间的河流段
 let widLevel = {
-  level1: 0.0018,
-  level2: 0.0015,
-  level3: 0.0014,
-  level4: 0.0012,
-  level5: 0.001,
+  level1: 0.0008,
+  level2: 0.0005,
+  level3: 0.0003,
+  level4: 0.0003,
+  level5: 0.0001,
 
   // level1: 0.0024,
   // level2: 0.0018,
@@ -647,23 +647,23 @@ function get_Whole_arr(strokes, width, gl) {
   }
 
   for (var i = 0; i < strokes.length; i++) {
-    switch (strokes[i].level) {
-      case 1:
-        width = widLevel.level1
-        break
-      case 2:
-        width = widLevel.level2
-        break
-      case 3:
-        width = widLevel.level3
-        break
-      case 4:
-        width = widLevel.level4
-        break
-      case (5, 6, 7, 8):
-        width = widLevel.level5
-        break
-    }
+    // switch (strokes[i].level) {
+    //   case 1:
+    //     width = widLevel.level1
+    //     break
+    //   case 2:
+    //     width = widLevel.level2
+    //     break
+    //   case 3:
+    //     width = widLevel.level3
+    //     break
+    //   case 4:
+    //     width = widLevel.level4
+    //     break
+    //   case (5, 6, 7, 8):
+    //     width = widLevel.level5
+    //     break
+    // }
     calculate(strokes[i].points) //strokes[i]为一个Node
   }
 
