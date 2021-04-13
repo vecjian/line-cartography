@@ -192,7 +192,7 @@ function draw_three_objs(
     var riverBuffer = createBuffer(gl, new Float32Array(overlapTris))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     n = overlapTris.length / 2
-    // gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
+    gl.drawArrays(gl.TRIANGLES, 0, n) //绘制多个三角形
     // }
   }
 

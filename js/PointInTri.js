@@ -202,7 +202,7 @@ Trianglesoverlap(tri3, tri2);
 // 未考虑三角形线段交点在线段端点处的情况，此情况下三角形有可能并不相交？？
 function lineIntersection(M, N, P, Q) {
   var flag = false
-  const THRESHOLD = 0.0001 //用于避免由于精度导致的计算错误
+  const THRESHOLD = 0.001 //用于避免由于精度导致的计算错误
 
   // 线段1
   A1 = N.y - M.y

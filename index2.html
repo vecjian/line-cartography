@@ -13,18 +13,19 @@
 </head>
 
 <body>
-  <!-- <canvas id="paint0" width="400" height="400" style="height: auto; width: auto"></canvas> -->
+  <canvas id="paint0" width="1080" height="900" style="height: auto; width: auto"></canvas>
   <!-- <canvas id="paint1" width="400" height="400" style="height: auto; width: auto"></canvas>
   <canvas id="paint2" width="400" height="400" style="height: auto; width: auto"></canvas> -->
-  <!-- <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas>
-  <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas> -->
+  <!-- <canvas id="paint3" width="400" height="400" style="height: auto; width: auto"></canvas> -->
+  <!-- <canvas id="paint4" width="400" height="400" style="height: auto; width: auto"></canvas> -->
   <!-- <canvas id="paint5" width="400" height="400" style="height: auto; width: auto"></canvas> -->
-  <canvas id="paint6" width="400" height="400" style="height: auto; width: auto"></canvas>
+  <!-- <canvas id="paint6" width="400" height="400" style="height: auto; width: auto"></canvas> -->
   <!-- <canvas id="paint7" width="400" height="400" style="height: auto; width: auto"></canvas> -->
 
   <!-- <script src="./js/."></script> -->
   <script src="./lib/earcut.dev.js"></script>
   <script src="./lib/GL_Util1.js"></script>
+  <script src="./lib/dat.gui.js"></script>
 
   <script src="./data/originData.js"></script>
   <script src="./data/border_simplify.js"></script>
@@ -32,6 +33,7 @@
   <script src="./data/border0.js"></script>
   <script src="./data/generalization.js"></script>
   <script src="./data/road.js"></script>
+  <script src="./data/Road1-1.js"></script>
   <script src="./data/twoRoad.js"></script>
   <!-- <script src="./data/forest_Project.js"></script> -->
   <script src="./data/forest2.js"></script>
@@ -70,6 +72,10 @@
   <script src="./data/oneRiver2.js"></script>
   <script src="./data/oneRiver3.js"></script>
   <script src="./data/oneRiver3_1.js"></script>
+  <script src="./data/generalization.js"></script>
+  <script src="./data/longLine.js"></script>
+  <script src="./data/longLine1.js"></script>
+  <script src="./data/longLine2.js"></script>
 
 
   <script src="./js/BinaryTree.js"></script>
@@ -137,8 +143,8 @@
     }
 
     //二叉树渐变河流网
-    let stroke_array = getMapStructure(originData, false); //同时生成boundary
-    // let stroke_array = getMapStructure(forest2, false); //同时生成boundary//森林中不能含有人工的河道，必须是天然的河流
+    // let stroke_array = getMapStructure(originData, false); //同时生成boundary
+    let stroke_array = getMapStructure(forest2, false); //同时生成boundary//森林中不能含有人工的河道，必须是天然的河流
     // let stroke_array = getMapStructure(tree5, false); //同时生成boundary
 
     function display_forest() {
@@ -160,23 +166,21 @@
     //单线看效果
     function draw_oneLine() {
       clearBoundary();
-      let stroke_array2 = getMapStructure(oneline1, false);
+      let stroke_array2 = getMapStructure(Road1, false);
       // let stroke_array2 = getMapStructure(road, false);
       var gl = getContextgl3();
       // draw_detect(gl, stroke_array2[0].points, 0.0010);
-      draw_detect(gl, stroke_array2[0]. points, 0.005);
+      draw_detect(gl, stroke_array2[0]. points, 0.012);
       clearBoundary();
     }
 
     //单线移位
     function draw_oneline1() {
-
       clearBoundary()
-      let stroke_array2 = getMapStructure(oneline1, false);
-
+      let stroke_array2 = getMapStructure(Road1, false);
       var gl = getContextgl6();
       // detect_displacement_draw(gl, stroke_array2[0].points, 0.6, 0.00055)
-      detect_displacement_draw(gl, stroke_array2[0].points, 0.2, 0.005)
+      detect_displacement_draw(gl, stroke_array2[0].points, -0.05, 0.012)
       clearBoundary();
     }
 
@@ -193,7 +197,7 @@
 
 
     //河流网
-    // display_forest(); //渐变河网
+    display_forest(); //渐变河网
     // riverNet(); //未渐变
 
     // borderStrip();//境界线
@@ -206,10 +210,52 @@
     // draw_contour()
     //着色器计算连续插值
 
-    draw_contours(contour9, 30 )//绘制等高线并绘，会改变boundary的值
+    // draw_contours(contour9, 30 )//绘制等高线并绘，会改变boundary的值
     // draw_contours(twoRoad, 0.005 )//绘制等高线并绘，会改变boundary的值
 
     // init();
+  </script>
+  <script>
+    function initGUI(){
+        var simpleLine =  {
+            width : 15,
+            feather:false,
+            gradient:false,
+            data:'forest',
+            // triangle:false,
+            cap: 'butt',
+            joint: 'miter'
+
+        };
+
+        var points = [-0.5,0.4, -0.9,0.2, -0.6,0 , -0.9,-0.2];      
+        var obj = simpleLine;
+        var gui = new dat.GUI();
+        gui.add(obj,'feather').onChange(redraw);
+        gui.add(obj, 'gradient').onChange(redraw);
+        // gui.add(obj,'triangle').onChange(redraw);
+        // gui.add(obj,'centralline').onChange(redrwa);
+
+        gui.add(obj, 'width').min(1).max(50).step(0.3).onFinishChange(redraw);
+        gui.add(obj, 'data', ['forest', 'tree','oneline']).onChange(redraw);
+        gui.add(obj, 'cap', ['round', 'square','butt']).onChange(redraw);
+
+        gui.add(obj, 'joint', ['round', 'miter','bevel']).onChange(redraw);
+
+        var oFolder = gui.addFolder('其他');
+
+        function redraw(){
+
+            // drawDifferJoint(simpleLine);
+            // spliteTriangle(simpleLine,PS);
+            // getThreeTriangleStrip(PS,simpleLine);
+            threeAntialiased(gl, coors[0], simpleLine);
+            threeAntialiased(gl, coors[1], simpleLine);
+            threeAntialiased(gl, coors[2], simpleLine);
+        
+        };
+    }
+initGUI()
   </script>
 </body>
 
