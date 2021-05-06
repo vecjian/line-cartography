@@ -34,6 +34,7 @@
   <script src="./data/generalization.js"></script>
   <script src="./data/road.js"></script>
   <script src="./data/Road1-1.js"></script>
+  <script src="./data/Road3.js"></script>
   <script src="./data/twoRoad.js"></script>
   <!-- <script src="./data/forest_Project.js"></script> -->
   <script src="./data/forest2.js"></script>
@@ -166,21 +167,21 @@
     //单线看效果
     function draw_oneLine() {
       clearBoundary();
-      let stroke_array2 = getMapStructure(Road1, false);
+      let stroke_array2 = getMapStructure(Road3, false);
       // let stroke_array2 = getMapStructure(road, false);
       var gl = getContextgl3();
       // draw_detect(gl, stroke_array2[0].points, 0.0010);
-      draw_detect(gl, stroke_array2[0]. points, 0.012);
+      draw_detect(gl, stroke_array2[0]. points, 0.0007);
       clearBoundary();
     }
 
     //单线移位
     function draw_oneline1() {
       clearBoundary()
-      let stroke_array2 = getMapStructure(Road1, false);
+      let stroke_array2 = getMapStructure(Road3, false);
       var gl = getContextgl6();
       // detect_displacement_draw(gl, stroke_array2[0].points, 0.6, 0.00055)
-      detect_displacement_draw(gl, stroke_array2[0].points, -0.05, 0.012)
+      detect_displacement_draw(gl, stroke_array2[0].points, 0.6, 0.0007)
       clearBoundary();
     }
 

@@ -158,7 +158,7 @@ function draw_three_objs(
   gl.useProgram(program.program)
 
   //设置缩放参数
-  gl.uniform1f(program.u_Scale, 1.0)
+  gl.uniform1f(program.u_Scale, 2)
 
   //绘制原始剖分三角形
   // gl.uniform4fv(program.u_color, [0.0, 0.2, 1.0, 0.7])
@@ -171,11 +171,11 @@ function draw_three_objs(
   // }
 
   //绘制中心线
-  gl.uniform4fv(program.u_color, [1, 0.0, 0.0, 1.0])
+  gl.uniform4fv(program.u_color, [0, 0.0, 0.0, 1.0])
   var riverBuffer = createBuffer(gl, new Float32Array(centralLine))
   bindAttribute(gl, riverBuffer, program.a_Position, 2)
   n = centralLine.length / 2
-  gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制中心线
+  // gl.drawArrays(gl.LINE_STRIP, 0, n) //绘制中心线
 
   /*
   gl.uniform4fv(program.u_color, [1.0, 0.0, 0.0, 1.0])
@@ -217,7 +217,7 @@ function draw_three_objs(
 
   //绘制截取后的折线
   if (newCentralLine) {
-    gl.uniform4fv(program.u_color, [1.0, 1.0, 1.0, 1.0])
+    gl.uniform4fv(program.u_color, [1.0, 0.0, 0.0, 1.0])
     var riverBuffer = createBuffer(gl, new Float32Array(newCentralLine))
     bindAttribute(gl, riverBuffer, program.a_Position, 2)
     n = newCentralLine.length / 2
